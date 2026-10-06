@@ -12,7 +12,13 @@ import type {
   CertificateStatus,
 } from "./types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+// On Vercel/serverless the app filesystem is read-only; persist to /tmp.
+// Note: /tmp is per-instance and can reset — fine for demos; use a real DB for production.
+const DATA_DIR =
+  process.env.CERT_DATA_DIR ||
+  (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME
+    ? path.join("/tmp", "skyhoist-cert-data")
+    : path.join(process.cwd(), "data"));
 const STORE_PATH = path.join(DATA_DIR, "certificate-store.json");
 const UPLOAD_DIR = path.join(DATA_DIR, "uploads");
 
