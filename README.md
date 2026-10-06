@@ -31,12 +31,12 @@ Open [http://localhost:3456](http://localhost:3456).
 
 Not linked from the marketing site. Open by URL only:
 
-- Login: [http://localhost:3456/certificate/login/](http://localhost:3456/certificate/login/)
-- Default admin (local seed):
+- Login: `/certificate/login/`
+- Default admin when env vars are unset:
   - Username: `admin`
   - Password: `SkyhoistAdmin1`
 
-Override with env vars before first run:
+On Vercel, set these **Production** environment variables, then Redeploy:
 
 ```bash
 CERT_ADMIN_USERNAME=admin
@@ -44,6 +44,8 @@ CERT_ADMIN_PASSWORD='your-strong-password'
 CERT_ADMIN_EMAIL=admin@skyhoistservices.com
 CERT_SESSION_SECRET='long-random-secret'
 ```
+
+Without those vars, login still works with the default password above. After changing env vars, trigger a new deployment.
 
 Roles:
 
