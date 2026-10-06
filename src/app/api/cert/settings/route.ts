@@ -13,7 +13,11 @@ export async function GET(request: Request) {
       verificationBaseUrl: `${origin}/verify/`,
       storeBackend: backend,
       uploadDirectory:
-        backend === "firebase" ? "gs://…/cert-uploads" : "data/uploads",
+        backend === "firebase"
+          ? process.env.FIREBASE_UPLOAD_BACKEND === "storage"
+            ? `gs://${process.env.FIREBASE_STORAGE_BUCKET || "…"}/cert-uploads`
+            : "Firestore certUploads"
+          : "data/uploads",
     });
   } catch {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
