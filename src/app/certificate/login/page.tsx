@@ -2,11 +2,9 @@
 
 import Image from "next/image";
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Field, inputClass, PrimaryButton } from "@/components/cert/ui";
 
 export default function CertificateLoginPage() {
-  const router = useRouter();
   const [identity, setIdentity] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -19,19 +17,31 @@ export default function CertificateLoginPage() {
     try {
       const res = await fetch("/api/cert/login/", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ identity, password }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data.error || "Incorrect username/email or password.");
+        setLoading(false);
         return;
       }
-      router.replace("/certificate/admin/customers/");
-      router.refresh();
+
+      // Confirm the session cookie is readable before leaving the login page.
+      const me = await fetch("/api/cert/me/", { credentials: "include" });
+      if (!me.ok) {
+        setError(
+          "Signed in, but the session cookie was not kept. Check that the site is on HTTPS and refresh once.",
+        );
+        setLoading(false);
+        return;
+      }
+
+      // Full navigation so the server layout always sees the new cookie.
+      window.location.assign("/certificate/admin/customers/");
     } catch {
       setError("Unable to sign in right now.");
-    } finally {
       setLoading(false);
     }
   }

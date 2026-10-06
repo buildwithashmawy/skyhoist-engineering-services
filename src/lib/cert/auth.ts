@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
-import type { SessionUser } from "./types";
-import { findUserByIdentity, publicUser, readStore } from "./store";
+import type { CertRole, SessionUser } from "./types";
+import { findUserByIdentity, publicUser } from "./store";
 
 const COOKIE_NAME = "skyhoist_cert_session";
 
@@ -38,7 +38,13 @@ export async function createSession(user: SessionUser) {
 
 export async function clearSession() {
   const jar = await cookies();
-  jar.delete(COOKIE_NAME);
+  jar.set(COOKIE_NAME, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  });
 }
 
 export async function getSession(): Promise<SessionUser | null> {
@@ -48,17 +54,16 @@ export async function getSession(): Promise<SessionUser | null> {
   try {
     const { payload } = await jwtVerify(token, secretKey());
     const id = String(payload.id || "");
-    if (!id) return null;
-    const store = await readStore();
-    const user = store.users.find((u) => u.id === id);
-    if (!user) return null;
-    return {
-      id: user.id,
-      fullName: user.fullName,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-    };
+    const username = String(payload.username || "");
+    const email = String(payload.email || "");
+    const fullName = String(payload.fullName || "");
+    const role = String(payload.role || "") as CertRole;
+    if (!id || !username || (role !== "admin" && role !== "operator")) {
+      return null;
+    }
+    // Trust the signed JWT. Do not require a local /tmp store lookup —
+    // serverless instances do not share filesystem state.
+    return { id, fullName, username, email, role };
   } catch {
     return null;
   }

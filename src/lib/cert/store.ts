@@ -2,6 +2,7 @@ import { randomBytes, randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
 import bcrypt from "bcryptjs";
+import { stableUserId } from "./ids";
 import type {
   Certificate,
   CertificatePageFile,
@@ -39,7 +40,8 @@ async function seedIfNeeded(store: CertStore): Promise<CertStore> {
   const email = process.env.CERT_ADMIN_EMAIL || "admin@skyhoistservices.com";
 
   const admin: CertUser = {
-    id: randomUUID(),
+    // Stable across serverless instances so logins don't break when /tmp resets.
+    id: stableUserId(username),
     fullName: "Skyhoist Admin",
     username: username.toLowerCase(),
     email: email.toLowerCase(),
