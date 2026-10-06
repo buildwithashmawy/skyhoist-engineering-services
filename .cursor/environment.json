@@ -1,0 +1,4 @@
+{
+  "name": "Origin setup",
+  "install": "./scripts/install-origin.sh"
+}
