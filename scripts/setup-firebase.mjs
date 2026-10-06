@@ -246,8 +246,17 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
 
   const preferredBucket =
     process.env.FIREBASE_STORAGE_BUCKET || `${projectId}.appspot.com`;
-  const bucketName = await ensureStorageBucket(token, projectId, preferredBucket);
-  process.env.FIREBASE_STORAGE_BUCKET = bucketName;
+  let bucketName = preferredBucket;
+  try {
+    bucketName = await ensureStorageBucket(token, projectId, preferredBucket);
+    process.env.FIREBASE_STORAGE_BUCKET = bucketName;
+  } catch (err) {
+    console.warn(
+      `Storage unavailable (${err?.message || err}). Certificate files will be stored in Firestore (certUploads) until billing/Storage is enabled.`,
+    );
+    bucketName = "";
+    delete process.env.FIREBASE_STORAGE_BUCKET;
+  }
 
   const { initializeApp, cert, getApps } = require("firebase-admin/app");
   const { getFirestore } = require("firebase-admin/firestore");
@@ -262,19 +271,20 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
         privateKey: sa.private_key,
       }),
       projectId,
-      storageBucket: bucketName,
+      ...(bucketName ? { storageBucket: bucketName } : {}),
     });
   }
 
   const db = getFirestore();
-  const bucket = getStorage().bucket();
+  const bucket = bucketName ? getStorage().bucket() : null;
 
   await db.collection("_meta").doc("certRegistry").set(
     {
       name: "Skyhoist certificate registry",
-      collections: ["certUsers", "certCustomers", "certCertificates"],
+      collections: ["certUsers", "certCustomers", "certCertificates", "certUploads"],
       uploadPrefix: "cert-uploads",
-      storageBucket: bucketName,
+      storageBucket: bucketName || null,
+      uploadBackend: bucketName ? "storage" : "firestore",
       provisionedAt: new Date().toISOString(),
     },
     { merge: true },
@@ -305,16 +315,20 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
     console.log(`Seeded admin user: ${username}`);
   }
 
-  const marker = bucket.file("cert-uploads/.keep");
-  const [exists] = await marker.exists();
-  if (!exists) {
-    await marker.save(Buffer.from("Skyhoist certificate uploads\n"), {
-      contentType: "text/plain",
-      resumable: false,
-    });
-    console.log("Created cert-uploads/ in Storage");
+  if (bucket) {
+    const marker = bucket.file("cert-uploads/.keep");
+    const [exists] = await marker.exists();
+    if (!exists) {
+      await marker.save(Buffer.from("Skyhoist certificate uploads\n"), {
+        contentType: "text/plain",
+        resumable: false,
+      });
+      console.log("Created cert-uploads/ in Storage");
+    } else {
+      console.log("Storage prefix cert-uploads/ already present");
+    }
   } else {
-    console.log("Storage prefix cert-uploads/ already present");
+    console.log("Skipping Storage marker — using Firestore certUploads");
   }
 
   // Keep a local env fragment the agent / user can copy into Vercel
@@ -323,7 +337,7 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
     process.env.CERT_SESSION_SECRET || randomBytes(32).toString("hex");
   const fragment = [
     `FIREBASE_PROJECT_ID=${projectId}`,
-    `FIREBASE_STORAGE_BUCKET=${bucketName}`,
+    bucketName ? `FIREBASE_STORAGE_BUCKET=${bucketName}` : "# FIREBASE_STORAGE_BUCKET= (enable Blaze + Storage later)",
     `FIREBASE_SERVICE_ACCOUNT_JSON='${JSON.stringify(sa)}'`,
     `CERT_ADMIN_USERNAME=${username}`,
     `CERT_ADMIN_PASSWORD=${password}`,
@@ -340,7 +354,11 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
 
   console.log("\nFirebase certificate database is linked.");
   console.log("Collections: certUsers, certCustomers, certCertificates");
-  console.log(`Uploads:     gs://${bucketName}/cert-uploads/`);
+  console.log(
+    bucketName
+      ? `Uploads:     gs://${bucketName}/cert-uploads/`
+      : "Uploads:     Firestore collection certUploads",
+  );
 }
 
 main().catch((err) => {

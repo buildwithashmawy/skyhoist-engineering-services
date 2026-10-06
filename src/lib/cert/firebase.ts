@@ -96,6 +96,12 @@ export const collections = {
   users: "certUsers",
   customers: "certCustomers",
   certificates: "certCertificates",
+  uploads: "certUploads",
 } as const;
 
 export const uploadPrefix = "cert-uploads";
+
+/** Prefer Cloud Storage when a bucket env is set and usable; otherwise Firestore. */
+export function preferStorageUploads() {
+  return process.env.FIREBASE_UPLOAD_BACKEND === "storage";
+}

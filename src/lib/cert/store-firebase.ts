@@ -5,6 +5,7 @@ import {
   collections,
   getDb,
   getUploadsBucket,
+  preferStorageUploads,
   uploadPrefix,
 } from "./firebase";
 import { stableUserId } from "./ids";
@@ -349,11 +350,10 @@ export const firebaseStore = {
     const snap = await ref.get();
     if (!snap.exists) throw new Error("Certificate not found.");
     const cert = snap.data() as Certificate;
-    const bucket = getUploadsBucket();
     await Promise.all(
       cert.pages.map(async (page) => {
         try {
-          await bucket.file(`${uploadPrefix}/${page.storedName}`).delete({ ignoreNotFound: true });
+          await deleteUpload(page.storedName);
         } catch {
           /* ignore */
         }
@@ -388,18 +388,38 @@ export const firebaseStore = {
     const storedName = `${randomUUID()}-p${page}${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
     const mimeType = file.type || "application/octet-stream";
-    await getUploadsBucket()
-      .file(`${uploadPrefix}/${storedName}`)
-      .save(buffer, {
-        contentType: mimeType,
-        resumable: false,
-        metadata: {
-          metadata: {
-            originalName: file.name,
-            page: String(page),
-          },
-        },
-      });
+
+    if (preferStorageUploads()) {
+      try {
+        await getUploadsBucket()
+          .file(`${uploadPrefix}/${storedName}`)
+          .save(buffer, {
+            contentType: mimeType,
+            resumable: false,
+            metadata: {
+              metadata: {
+                originalName: file.name,
+                page: String(page),
+              },
+            },
+          });
+        return {
+          page,
+          fileName: file.name,
+          storedName,
+          mimeType,
+          size: buffer.length,
+        };
+      } catch {
+        // Fall through to Firestore when Storage/billing is unavailable.
+      }
+    }
+
+    await saveUploadToFirestore(storedName, buffer, {
+      fileName: file.name,
+      mimeType,
+      page,
+    });
     return {
       page,
       fileName: file.name,
@@ -410,9 +430,90 @@ export const firebaseStore = {
   },
 
   async readUpload(storedName: string) {
+    return readUploadBytes(storedName);
+  },
+};
+
+const CHUNK_CHARS = 700_000; // stay under Firestore 1 MiB doc limit (base64 expands ~4/3)
+
+async function saveUploadToFirestore(
+  storedName: string,
+  buffer: Buffer,
+  meta: { fileName: string; mimeType: string; page: number },
+) {
+  const db = getDb();
+  const b64 = buffer.toString("base64");
+  const chunks: string[] = [];
+  for (let i = 0; i < b64.length; i += CHUNK_CHARS) {
+    chunks.push(b64.slice(i, i + CHUNK_CHARS));
+  }
+  const batch = db.batch();
+  const root = db.collection(collections.uploads).doc(storedName);
+  batch.set(root, {
+    storedName,
+    fileName: meta.fileName,
+    mimeType: meta.mimeType,
+    page: meta.page,
+    size: buffer.length,
+    chunkCount: chunks.length,
+    backend: "firestore",
+    createdAt: new Date().toISOString(),
+  });
+  chunks.forEach((data, index) => {
+    batch.set(root.collection("chunks").doc(String(index)), { index, data });
+  });
+  await batch.commit();
+}
+
+async function readUploadBytes(storedName: string): Promise<Buffer> {
+  const db = getDb();
+  const root = db.collection(collections.uploads).doc(storedName);
+  const snap = await root.get();
+  if (snap.exists) {
+    const meta = snap.data() as { chunkCount?: number };
+    const count = meta.chunkCount || 0;
+    const parts: string[] = [];
+    for (let i = 0; i < count; i++) {
+      const chunk = await root.collection("chunks").doc(String(i)).get();
+      if (!chunk.exists) throw new Error("Upload chunk missing.");
+      parts.push(String((chunk.data() as { data: string }).data || ""));
+    }
+    return Buffer.from(parts.join(""), "base64");
+  }
+
+  if (preferStorageUploads()) {
     const [buffer] = await getUploadsBucket()
       .file(`${uploadPrefix}/${storedName}`)
       .download();
     return buffer;
-  },
-};
+  }
+
+  // Last resort: try Storage even when not preferred (bucket may exist later).
+  try {
+    const [buffer] = await getUploadsBucket()
+      .file(`${uploadPrefix}/${storedName}`)
+      .download();
+    return buffer;
+  } catch {
+    throw new Error("Upload not found.");
+  }
+}
+
+async function deleteUpload(storedName: string) {
+  const db = getDb();
+  const root = db.collection(collections.uploads).doc(storedName);
+  const snap = await root.get();
+  if (snap.exists) {
+    const chunks = await root.collection("chunks").listDocuments();
+    await Promise.all(chunks.map((c) => c.delete()));
+    await root.delete();
+    return;
+  }
+  try {
+    await getUploadsBucket()
+      .file(`${uploadPrefix}/${storedName}`)
+      .delete({ ignoreNotFound: true });
+  } catch {
+    /* ignore */
+  }
+}

@@ -47,11 +47,11 @@ Public certificate verification (also unlisted): `/verify/<token>/`
 
 Local JSON under `/data` (or `/tmp` on serverless) does **not** survive across Vercel instances. Production must use Firebase.
 
-### 1. Create Firestore + Storage (one-time in console)
+### 1. Firebase project (one-time)
 
 1. Open [Firebase Console → skyhoist-engineering](https://console.firebase.google.com/project/skyhoist-engineering)
-2. **Build → Firestore Database → Create database** (Native mode, production or test mode — rules below lock clients out)
-3. **Build → Storage → Get started**
+2. **Build → Firestore Database → Create database** (Native mode) — required
+3. Optional later: upgrade to **Blaze** and enable **Storage** for large file uploads. Until then, certificate page files are stored in the Firestore `certUploads` collection.
 4. **Project settings → Service accounts → Generate new private key**
 
 ### 2. Env vars
