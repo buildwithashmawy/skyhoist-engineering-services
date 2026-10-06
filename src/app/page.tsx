@@ -328,9 +328,8 @@ export default function HomePage() {
                 Ready for your next industrial scope?
               </h2>
               <p className="mt-4 max-w-xl text-white/75">
-                Talk with {site.contactName}, {site.contactTitle}, about
-                inspection, testing, calibration, training, and technical
-                support.
+                Talk with our team about inspection, testing, calibration,
+                training, and technical support.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link

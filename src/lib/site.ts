@@ -23,8 +23,6 @@ export const site = {
     weekdays: "Sunday – Thursday: 8:00 AM – 5:00 PM",
     weekend: "Friday & Saturday: Closed",
   },
-  contactName: "Mostafa Salah Shama",
-  contactTitle: "Management Director",
 } as const;
 
 export type Service = {
