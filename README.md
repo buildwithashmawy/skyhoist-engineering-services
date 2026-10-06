@@ -51,7 +51,7 @@ Local JSON under `/data` (or `/tmp` on serverless) does **not** survive across V
 
 1. Open [Firebase Console → skyhoist-engineering](https://console.firebase.google.com/project/skyhoist-engineering)
 2. **Build → Firestore Database → Create database** (Native mode) — required
-3. Optional later: upgrade to **Blaze** and enable **Storage** for large file uploads. Until then, certificate page files are stored in the Firestore `certUploads` collection.
+3. **Build → Storage → Get started** (bucket like `skyhoist-engineering.firebasestorage.app`)
 4. **Project settings → Service accounts → Generate new private key**
 
 ### 2. Env vars
@@ -60,7 +60,8 @@ Copy `.env.example` → `.env.local` and set:
 
 ```bash
 FIREBASE_SERVICE_ACCOUNT_JSON='{...full service account JSON...}'
-FIREBASE_STORAGE_BUCKET=skyhoist-engineering.appspot.com
+FIREBASE_STORAGE_BUCKET=skyhoist-engineering.firebasestorage.app
+FIREBASE_UPLOAD_BACKEND=storage
 CERT_ADMIN_USERNAME=admin
 CERT_ADMIN_PASSWORD='your-strong-password'
 CERT_SESSION_SECRET='long-random-secret'
@@ -81,7 +82,8 @@ This writes:
 | `certUsers` | Admins + operators |
 | `certCustomers` | Customers |
 | `certCertificates` | Certificates + verification tokens |
-| `cert-uploads/` (Storage) | Certificate page PDFs/images |
+| `cert-uploads/` (Storage) | Certificate page PDFs/images (`FIREBASE_UPLOAD_BACKEND=storage`) |
+| `certUploads` (Firestore) | Fallback file storage if Storage is unavailable |
 
 Security rules deny all client SDK access; only the Next.js server (Admin SDK) reads/writes.
 

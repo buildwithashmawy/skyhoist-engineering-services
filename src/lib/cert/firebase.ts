@@ -54,7 +54,7 @@ function getApp() {
   if (serviceAccount) {
     const storageBucket =
       process.env.FIREBASE_STORAGE_BUCKET ||
-      `${serviceAccount.project_id}.appspot.com`;
+      `${serviceAccount.project_id}.firebasestorage.app`;
     app = initializeApp({
       credential: cert({
         projectId: serviceAccount.project_id,
@@ -70,7 +70,8 @@ function getApp() {
   if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     const projectId = process.env.FIREBASE_PROJECT_ID || "skyhoist-engineering";
     const storageBucket =
-      process.env.FIREBASE_STORAGE_BUCKET || `${projectId}.appspot.com`;
+      process.env.FIREBASE_STORAGE_BUCKET ||
+      `${projectId}.firebasestorage.app`;
     app = initializeApp({ projectId, storageBucket });
     return app;
   }
@@ -101,7 +102,11 @@ export const collections = {
 
 export const uploadPrefix = "cert-uploads";
 
-/** Prefer Cloud Storage when a bucket env is set and usable; otherwise Firestore. */
+/** Prefer Cloud Storage when configured; otherwise Firestore certUploads. */
 export function preferStorageUploads() {
-  return process.env.FIREBASE_UPLOAD_BACKEND === "storage";
+  const backend = process.env.FIREBASE_UPLOAD_BACKEND;
+  if (backend === "firestore") return false;
+  if (backend === "storage") return true;
+  // Default to Storage whenever a bucket is configured.
+  return Boolean(process.env.FIREBASE_STORAGE_BUCKET);
 }

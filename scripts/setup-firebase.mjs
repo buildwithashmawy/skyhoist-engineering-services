@@ -128,7 +128,9 @@ async function ensureFirestore(token, projectId) {
     (d) => d.name === `projects/${projectId}/databases/(default)`,
   );
   if (existing) {
-    console.log(`Firestore (default) already exists (${existing.locationId || "unknown location"})`);
+    console.log(
+      `Firestore (default) already exists (${existing.locationId || "unknown location"})`,
+    );
     return;
   }
 
@@ -139,7 +141,6 @@ async function ensureFirestore(token, projectId) {
     locationId: DEFAULT_LOCATION,
   });
   if (!created.ok) {
-    // Already exists race / conflict
     if (
       created.status === 409 ||
       String(created.data?.error?.status || "").includes("ALREADY_EXISTS")
@@ -152,7 +153,6 @@ async function ensureFirestore(token, projectId) {
     );
   }
   console.log("Firestore create operation started:", created.data?.name || "ok");
-  // Wait briefly for the long-running op
   if (created.data?.name) {
     for (let i = 0; i < 30; i++) {
       await new Promise((r) => setTimeout(r, 2000));
@@ -163,31 +163,52 @@ async function ensureFirestore(token, projectId) {
       );
       if (op.data?.done) {
         if (op.data.error) {
-          throw new Error(`Firestore create failed: ${JSON.stringify(op.data.error)}`);
+          throw new Error(
+            `Firestore create failed: ${JSON.stringify(op.data.error)}`,
+          );
         }
         console.log("Firestore (default) is ready.");
         return;
       }
       process.stdout.write(".");
     }
-    console.log("\nFirestore create still running; continuing with seed (may retry).");
+    console.log(
+      "\nFirestore create still running; continuing with seed (may retry).",
+    );
   }
 }
 
 async function ensureStorageBucket(token, projectId, bucketName) {
-  const getUrl = `https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(bucketName)}`;
-  const got = await api(token, "GET", getUrl);
-  if (got.ok) {
-    console.log(`Storage bucket already exists: ${bucketName}`);
-    return bucketName;
-  }
-
-  // Prefer Firebase default bucket name, then appspot, then firebasestorage.app
   const candidates = [
     bucketName,
-    `${projectId}.appspot.com`,
     `${projectId}.firebasestorage.app`,
+    `${projectId}.appspot.com`,
   ].filter((v, i, a) => a.indexOf(v) === i);
+
+  // Discover an existing bucket before attempting creates (Admin SDK keys
+  // often cannot create buckets even when Firebase Storage already exists).
+  for (const name of candidates) {
+    const got = await api(
+      token,
+      "GET",
+      `https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(name)}`,
+    );
+    if (got.ok) {
+      console.log(`Storage bucket already exists: ${name}`);
+      return name;
+    }
+  }
+
+  const listed = await api(
+    token,
+    "GET",
+    `https://storage.googleapis.com/storage/v1/b?project=${projectId}`,
+  );
+  const existing = listed.data?.items?.[0]?.name;
+  if (existing) {
+    console.log(`Using project Storage bucket: ${existing}`);
+    return existing;
+  }
 
   for (const name of candidates) {
     console.log(`Creating Storage bucket ${name}…`);
@@ -211,10 +232,12 @@ async function ensureStorageBucket(token, projectId, bucketName) {
       console.log(`Storage bucket already exists: ${name}`);
       return name;
     }
-    console.warn(`  failed (${created.status}): ${created.data?.error?.message || JSON.stringify(created.data)}`);
+    console.warn(
+      `  failed (${created.status}): ${created.data?.error?.message || JSON.stringify(created.data)}`,
+    );
   }
   throw new Error(
-    "Could not create a Storage bucket. Enable the Cloud Storage API in Google Cloud Console, then re-run.",
+    "Could not create a Storage bucket. Enable Storage in the Firebase console, then re-run.",
   );
 }
 
@@ -233,7 +256,6 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
   const projectId = sa.project_id;
   if (!projectId) throw new Error("Service account JSON is missing project_id.");
 
-  // Persist credentials for firebase-admin + optional CLI use in this session
   const keyPath = resolve(process.cwd(), ".firebase-service-account.json");
   writeFileSync(keyPath, JSON.stringify(sa, null, 2), { mode: 0o600 });
   process.env.GOOGLE_APPLICATION_CREDENTIALS = keyPath;
@@ -245,14 +267,18 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
   await ensureFirestore(token, projectId);
 
   const preferredBucket =
-    process.env.FIREBASE_STORAGE_BUCKET || `${projectId}.appspot.com`;
+    process.env.FIREBASE_STORAGE_BUCKET ||
+    `${projectId}.firebasestorage.app`;
   let bucketName = preferredBucket;
   try {
     bucketName = await ensureStorageBucket(token, projectId, preferredBucket);
     process.env.FIREBASE_STORAGE_BUCKET = bucketName;
+    if (!process.env.FIREBASE_UPLOAD_BACKEND) {
+      process.env.FIREBASE_UPLOAD_BACKEND = "storage";
+    }
   } catch (err) {
     console.warn(
-      `Storage unavailable (${err?.message || err}). Certificate files will be stored in Firestore (certUploads) until billing/Storage is enabled.`,
+      `Storage unavailable (${err?.message || err}). Certificate files will be stored in Firestore (certUploads) until Storage is enabled.`,
     );
     bucketName = "";
     delete process.env.FIREBASE_STORAGE_BUCKET;
@@ -281,7 +307,12 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
   await db.collection("_meta").doc("certRegistry").set(
     {
       name: "Skyhoist certificate registry",
-      collections: ["certUsers", "certCustomers", "certCertificates", "certUploads"],
+      collections: [
+        "certUsers",
+        "certCustomers",
+        "certCertificates",
+        "certUploads",
+      ],
       uploadPrefix: "cert-uploads",
       storageBucket: bucketName || null,
       uploadBackend: bucketName ? "storage" : "firestore",
@@ -331,13 +362,15 @@ Paste the service account key for project ${PROJECT_HINT}, then re-run:
     console.log("Skipping Storage marker — using Firestore certUploads");
   }
 
-  // Keep a local env fragment the agent / user can copy into Vercel
   const envLocalPath = resolve(process.cwd(), ".env.local");
   const sessionSecret =
     process.env.CERT_SESSION_SECRET || randomBytes(32).toString("hex");
   const fragment = [
     `FIREBASE_PROJECT_ID=${projectId}`,
-    bucketName ? `FIREBASE_STORAGE_BUCKET=${bucketName}` : "# FIREBASE_STORAGE_BUCKET= (enable Blaze + Storage later)",
+    bucketName
+      ? `FIREBASE_STORAGE_BUCKET=${bucketName}`
+      : "# FIREBASE_STORAGE_BUCKET= (enable Storage later)",
+    bucketName ? "FIREBASE_UPLOAD_BACKEND=storage" : "FIREBASE_UPLOAD_BACKEND=firestore",
     `FIREBASE_SERVICE_ACCOUNT_JSON='${JSON.stringify(sa)}'`,
     `CERT_ADMIN_USERNAME=${username}`,
     `CERT_ADMIN_PASSWORD=${password}`,
