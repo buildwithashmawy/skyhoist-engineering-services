@@ -39,32 +39,20 @@ export default function HomePage() {
 
         <div className="relative mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-5 pb-16 pt-28 md:justify-center md:px-8 md:pb-24">
           <div className="max-w-3xl">
-            <HeroEnter delay={0.05}>
-              <div className="mb-6 hidden md:inline-flex">
-                <span className="relative pulse-ring inline-flex">
-                  <Image
-                    src="/images/logo-mark.png"
-                    alt=""
-                    width={72}
-                    height={72}
-                    className="h-[4.5rem] w-[4.5rem] rounded-full object-cover shadow-2xl shadow-black/40 ring-2 ring-white/70"
-                    priority
-                  />
-                </span>
-              </div>
-            </HeroEnter>
-
-            <HeroEnter delay={0.15}>
-              <p className="font-display text-[clamp(2.6rem,8vw,5.6rem)] font-bold leading-[0.92] tracking-[0.1em] text-white">
-                SKYHOIST
-              </p>
-              <p className="mt-2 text-sm font-semibold tracking-[0.34em] text-[var(--brand-orange)] sm:text-base">
-                ENGINEERING SERVICES
-              </p>
+            <HeroEnter delay={0.1}>
+              <Image
+                src="/images/logo.png"
+                alt={site.name}
+                width={824}
+                height={548}
+                priority
+                className="h-auto w-[min(100%,22rem)] object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)] sm:w-[min(100%,28rem)] md:w-[min(100%,34rem)]"
+                sizes="(max-width: 640px) 22rem, (max-width: 768px) 28rem, 34rem"
+              />
             </HeroEnter>
 
             <HeroEnter delay={0.28}>
-              <h1 className="mt-7 max-w-2xl text-[clamp(1.35rem,3.2vw,2.35rem)] font-semibold leading-tight text-white">
+              <h1 className="mt-8 max-w-2xl text-[clamp(1.35rem,3.2vw,2.35rem)] font-semibold leading-tight text-white">
                 {site.tagline}
               </h1>
             </HeroEnter>

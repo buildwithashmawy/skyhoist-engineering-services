@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { SiteLogo } from "@/components/site-logo";
 import { nav, site } from "@/lib/site";
 
 export function SiteFooter() {
@@ -11,23 +11,7 @@ export function SiteFooter() {
 
       <div className="relative mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-[1.4fr_1fr_1.1fr] md:px-8 md:py-20">
         <div>
-          <div className="flex items-center gap-3">
-            <Image
-              src="/images/logo-mark.png"
-              alt={`${site.name} logo`}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-full object-cover"
-            />
-            <div>
-              <div className="font-display text-lg font-bold tracking-[0.16em]">
-                SKYHOIST
-              </div>
-              <div className="text-[0.62rem] font-semibold tracking-[0.3em] text-[var(--brand-orange)]">
-                ENGINEERING SERVICES
-              </div>
-            </div>
-          </div>
+          <SiteLogo height={72} />
           <p className="mt-5 max-w-md text-sm leading-relaxed text-white/70">
             Independent inspection, calibration, testing, training, and
             industrial support with dependable technical standards.

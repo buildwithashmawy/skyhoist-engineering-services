@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Mail, Phone } from "lucide-react";
+import { SiteLogo } from "@/components/site-logo";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { nav, site } from "@/lib/site";
@@ -73,27 +73,14 @@ export function SiteHeader() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 md:px-8">
           <Link
             href="/"
-            className="group flex items-center gap-3"
+            className="inline-flex items-center transition duration-500 hover:scale-[1.02]"
             onClick={() => setOpen(false)}
           >
-            <span className="relative">
-              <Image
-                src="/images/logo-mark.png"
-                alt={`${site.name} logo`}
-                width={48}
-                height={48}
-                className="h-11 w-11 rounded-full object-cover shadow-lg shadow-black/30 ring-2 ring-white/60 transition duration-500 group-hover:scale-[1.04]"
-                priority
-              />
-            </span>
-            <div className="leading-none">
-              <div className="font-display text-[0.98rem] font-bold tracking-[0.16em] text-white md:text-[1.05rem]">
-                SKYHOIST
-              </div>
-              <div className="mt-1 text-[0.62rem] font-semibold tracking-[0.3em] text-[var(--brand-orange)]">
-                ENGINEERING SERVICES
-              </div>
-            </div>
+            <SiteLogo
+              priority
+              height={52}
+              className="drop-shadow-[0_8px_18px_rgba(0,0,0,0.35)]"
+            />
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
