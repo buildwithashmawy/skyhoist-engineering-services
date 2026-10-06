@@ -136,8 +136,6 @@ export default function AboutPage() {
                 Based in Cairo, ready for industrial scopes
               </h2>
               <p className="mt-4 text-white/75">
-                {site.contactName}, {site.contactTitle}
-                <br />
                 {site.address.line1}
                 <br />
                 {site.address.line2}
