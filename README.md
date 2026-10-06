@@ -1,31 +1,32 @@
-# Origin setup
+# Skyhoist Engineering Services
 
-Workspace for Cursor Cloud Agents with the [Origin](https://cursor.com) CLI installed and ready.
+Corporate website for **Skyhoist Engineering Services** — a Next.js rebuild of the former Levagex Petroleum Services site with full rebranding.
 
-## What’s here
+## Stack
 
-- `scripts/install-origin.sh` — installs Origin and links it to `/usr/local/bin`
-- `.cursor/environment.json` — Cloud Agent install hook so new agents get Origin on PATH
+- Next.js (App Router) + TypeScript
+- Tailwind CSS + shadcn/ui
+- Brand assets from the Skyhoist logo pack and industrial photography
 
-## Install Origin locally
+## Contact
 
-```bash
-curl -fsSL https://downloads.cursor.com/origin/install.sh | sh
-export PATH="$HOME/.local/bin:$PATH"
-```
+- **Address:** Office 201, Building 38, Al-Multaqa Al-Arabi, Sheraton Airport, Cairo, Egypt
+- **Phone:** +201275109220 · +201042851184
+- **Email:** Info@skyhoistservices.com
+- **Web:** skyhoistservices.com
 
-Or use the repo script (requires `sudo` to link into `/usr/local/bin`):
-
-```bash
-./scripts/install-origin.sh
-```
-
-## Verify
+## Run locally
 
 ```bash
-origin --version
+npm install
+npm run dev -- --port 3456
 ```
 
-## Notes
+Open [http://localhost:3456](http://localhost:3456).
 
-This repository started empty. Origin `2026.10.01-18-10-45-4a05741` was installed in the Cloud Agent environment. Point the agent at a product repo (or describe what to build here) to continue feature work.
+## Scripts
+
+- `npm run dev` — development server
+- `npm run build` — production build
+- `npm run start` — serve production build
+- `npm run lint` — ESLint
