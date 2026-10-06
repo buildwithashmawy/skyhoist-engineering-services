@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Cabin, Source_Sans_3 } from "next/font/google";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -30,6 +28,10 @@ export const metadata: Metadata = {
     siteName: site.name,
     type: "website",
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
@@ -42,11 +44,7 @@ export default function RootLayout({
       lang="en"
       className={`${cabin.variable} ${sourceSans.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">
-        <SiteHeader />
-        <main className="flex-1">{children}</main>
-        <SiteFooter />
-      </body>
+      <body className="flex min-h-full flex-col font-sans">{children}</body>
     </html>
   );
 }

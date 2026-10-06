@@ -44,4 +44,7 @@ next-env.d.ts
 /uploads/
 /assets/
 
+# certificate dashboard local database + uploads
+/data/
+
 .firebase/
