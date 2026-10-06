@@ -1,7 +1,6 @@
-import { promises as fs } from "fs";
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/cert/auth";
-import { getCertificateByToken, uploadPath } from "@/lib/cert/store";
+import { getCertificateByToken, readUpload } from "@/lib/cert/store";
 
 type Ctx = { params: Promise<{ storedName: string }> };
 
@@ -26,7 +25,7 @@ export async function GET(request: Request, ctx: Ctx) {
   }
 
   try {
-    const data = await fs.readFile(uploadPath(storedName));
+    const data = await readUpload(storedName);
     const ext = storedName.split(".").pop()?.toLowerCase();
     const type =
       ext === "pdf"
@@ -36,7 +35,7 @@ export async function GET(request: Request, ctx: Ctx) {
           : ext === "jpg" || ext === "jpeg"
             ? "image/jpeg"
             : "application/octet-stream";
-    return new NextResponse(data, {
+    return new NextResponse(new Uint8Array(data), {
       headers: {
         "Content-Type": type,
         "Cache-Control": "private, max-age=3600",

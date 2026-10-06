@@ -6,7 +6,7 @@ Corporate website for **Skyhoist Engineering Services** — a Next.js rebuild of
 
 - Next.js (App Router) + TypeScript
 - Tailwind CSS + shadcn/ui
-- Local JSON store + file uploads for the certificate dashboard
+- **Firebase Firestore + Storage** for the certificate registry (falls back to local JSON when Firebase env vars are unset)
 - Brand assets from the Skyhoist logo pack and industrial photography
 
 ## Contact
@@ -36,17 +36,6 @@ Not linked from the marketing site. Open by URL only:
   - Username: `admin`
   - Password: `SkyhoistAdmin1`
 
-On Vercel, set these **Production** environment variables, then Redeploy:
-
-```bash
-CERT_ADMIN_USERNAME=admin
-CERT_ADMIN_PASSWORD='your-strong-password'
-CERT_ADMIN_EMAIL=admin@skyhoistservices.com
-CERT_SESSION_SECRET='long-random-secret'
-```
-
-Without those vars, login still works with the default password above. After changing env vars, trigger a new deployment.
-
 Roles:
 
 - **Admin** — customers, certificates, settings, add/remove operators (password-based, no email invite)
@@ -54,7 +43,51 @@ Roles:
 
 Public certificate verification (also unlisted): `/verify/<token>/`
 
-Local data lives in `/data` (gitignored).
+## Firebase database (required for Vercel)
+
+Local JSON under `/data` (or `/tmp` on serverless) does **not** survive across Vercel instances. Production must use Firebase.
+
+### 1. Create Firestore + Storage (one-time in console)
+
+1. Open [Firebase Console → skyhoist-engineering](https://console.firebase.google.com/project/skyhoist-engineering)
+2. **Build → Firestore Database → Create database** (Native mode, production or test mode — rules below lock clients out)
+3. **Build → Storage → Get started**
+4. **Project settings → Service accounts → Generate new private key**
+
+### 2. Env vars
+
+Copy `.env.example` → `.env.local` and set:
+
+```bash
+FIREBASE_SERVICE_ACCOUNT_JSON='{...full service account JSON...}'
+FIREBASE_STORAGE_BUCKET=skyhoist-engineering.appspot.com
+CERT_ADMIN_USERNAME=admin
+CERT_ADMIN_PASSWORD='your-strong-password'
+CERT_SESSION_SECRET='long-random-secret'
+```
+
+On Vercel, add the same vars for **Production**, then Redeploy.
+
+### 3. Seed collections + admin
+
+```bash
+npm run firebase:setup
+```
+
+This writes:
+
+| Collection / path | Purpose |
+| --- | --- |
+| `certUsers` | Admins + operators |
+| `certCustomers` | Customers |
+| `certCertificates` | Certificates + verification tokens |
+| `cert-uploads/` (Storage) | Certificate page PDFs/images |
+
+Security rules deny all client SDK access; only the Next.js server (Admin SDK) reads/writes.
+
+```bash
+npm run firebase:rules   # after firebase login
+```
 
 ## Scripts
 
@@ -62,7 +95,9 @@ Local data lives in `/data` (gitignored).
 - `npm run build` — production build
 - `npm run start` — serve production build
 - `npm run lint` — ESLint
+- `npm run firebase:setup` — seed Firestore + Storage for the cert registry
+- `npm run firebase:rules` — deploy Firestore/Storage security rules
 
 ## Deploy notes
 
-Firebase Hosting static `out/` export is no longer used for the full app because the certificate portal requires server routes. Deploy with a Node host (`next start`) or an adapter that supports Next.js Route Handlers.
+Deploy with a Node host that supports Next.js Route Handlers (e.g. Vercel). Firebase Hosting static export is not used for the full app.

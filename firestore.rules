@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Certificate registry is accessed only via the Next.js server
+    // (Firebase Admin SDK). Deny all client SDK access.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,10 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Certificate uploads are read/written only via the Next.js server
+    // (Firebase Admin SDK). Deny all client SDK access.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
