@@ -49,9 +49,6 @@ export default function ContactPage() {
               <h2 className="font-display text-3xl font-bold tracking-wide text-[var(--brand-ink)]">
                 Cairo office
               </h2>
-              <p className="mt-2 text-[var(--brand-steel)]">
-                {site.contactName} · {site.contactTitle}
-              </p>
             </div>
 
             <div className="space-y-5 text-[var(--brand-ink)]">
