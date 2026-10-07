@@ -8,6 +8,7 @@ import {
   preferStorageUploads,
   uploadPrefix,
 } from "./firebase";
+import { nextCertificateNo } from "./certificate-no";
 import { stableUserId } from "./ids";
 import type {
   Certificate,
@@ -377,16 +378,26 @@ export const firebaseStore = {
     await ref.delete();
   },
 
+  async nextCertificateNumber() {
+    const snap = await getDb().collection(collections.certificates).get();
+    return nextCertificateNo(
+      snap.docs.map((doc) => String((doc.data() as Certificate).certificateNo || "")),
+    );
+  },
+
   async cloneCertificate(id: string, createdById: string) {
     const db = getDb();
     const snap = await db.collection(collections.certificates).doc(id).get();
     if (!snap.exists) throw new Error("Certificate not found.");
     const source = snap.data() as Certificate;
+    const all = await db.collection(collections.certificates).get();
     const now = new Date().toISOString();
     const clone: Certificate = {
       ...source,
       id: randomUUID(),
-      certificateNo: `${source.certificateNo}-COPY`,
+      certificateNo: nextCertificateNo(
+        all.docs.map((doc) => String((doc.data() as Certificate).certificateNo || "")),
+      ),
       verificationToken: makeToken(),
       pages: [],
       createdAt: now,

@@ -2,6 +2,7 @@ import { randomBytes, randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
 import bcrypt from "bcryptjs";
+import { nextCertificateNo } from "./certificate-no";
 import { stableUserId } from "./ids";
 import type {
   Certificate,
@@ -325,6 +326,11 @@ export const localStore = {
     await writeStore(store);
   },
 
+  async nextCertificateNumber() {
+    const store = await readStore();
+    return nextCertificateNo(store.certificates.map((c) => c.certificateNo));
+  },
+
   async cloneCertificate(id: string, createdById: string) {
     const store = await readStore();
     const source = store.certificates.find((c) => c.id === id);
@@ -333,7 +339,9 @@ export const localStore = {
     const clone: Certificate = {
       ...source,
       id: randomUUID(),
-      certificateNo: `${source.certificateNo}-COPY`,
+      certificateNo: nextCertificateNo(
+        store.certificates.map((c) => c.certificateNo),
+      ),
       verificationToken: makeToken(),
       pages: [],
       createdAt: now,

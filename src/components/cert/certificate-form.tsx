@@ -53,6 +53,11 @@ export function CertificateForm({ certificateId }: Props) {
 
       if (!certificateId) {
         setVerificationToken(randomToken());
+        const nextRes = await fetch("/api/cert/certificates/?nextNumber=1");
+        const nextData = await nextRes.json().catch(() => ({}));
+        if (nextRes.ok && nextData.nextCertificateNo) {
+          setCertificateNo(String(nextData.nextCertificateNo));
+        }
         return;
       }
 

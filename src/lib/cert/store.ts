@@ -91,6 +91,10 @@ export async function cloneCertificate(id: string, createdById: string) {
   return active().cloneCertificate(id, createdById);
 }
 
+export async function nextCertificateNumber() {
+  return active().nextCertificateNumber();
+}
+
 export async function saveUpload(file: File, page: number) {
   return active().saveUpload(file, page);
 }

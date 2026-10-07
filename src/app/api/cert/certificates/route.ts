@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
 import { requireSession } from "@/lib/cert/auth";
-import { listCertificates, upsertCertificate } from "@/lib/cert/store";
+import {
+  listCertificates,
+  nextCertificateNumber,
+  upsertCertificate,
+} from "@/lib/cert/store";
 import type { CertificateStatus } from "@/lib/cert/types";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await requireSession();
+    const url = new URL(request.url);
+    if (url.searchParams.get("nextNumber") === "1") {
+      return NextResponse.json({
+        nextCertificateNo: await nextCertificateNumber(),
+      });
+    }
     return NextResponse.json({ certificates: await listCertificates() });
   } catch {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
