@@ -69,22 +69,23 @@ export function AdminShell({
 
   return (
     <div className="min-h-screen bg-[#f5f1e8] text-[#171310]">
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col bg-black py-8 text-white shadow-[12px_0_40px_rgba(0,0,0,0.18)] md:flex">
-        <div className="px-6">
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col bg-[linear-gradient(165deg,#013baa_0%,#007cc1_58%,#04b5ff_100%)] py-8 text-white shadow-[12px_0_40px_rgba(1,59,170,0.28)] md:flex">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(224,89,20,0.28),transparent_46%)]" />
+        <div className="relative px-6">
           <Image
-            src="/images/logo.png"
+            src="/images/logo-white.png"
             alt="Skyhoist"
-            width={1537}
+            width={1538}
             height={1023}
             className="h-auto w-full object-contain"
             priority
           />
-          <p className="mt-3 text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[#c9a24a]">
+          <p className="mt-3 text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[#ffb087]">
             Certificate Registry
           </p>
         </div>
 
-        <nav className="mt-8 flex-1 space-y-1">
+        <nav className="relative mt-8 flex-1 space-y-1">
           {visible.map((item) => {
             const active = isActive(pathname, item.href);
             const Icon = item.icon;
@@ -93,9 +94,9 @@ export function AdminShell({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative flex items-center gap-3 px-6 py-4 text-sm font-semibold text-[#d9d9d9] transition hover:bg-white/8 hover:text-[#c9a24a]",
+                  "relative flex items-center gap-3 px-6 py-4 text-sm font-semibold text-white/75 transition hover:bg-white/10 hover:text-white",
                   active &&
-                    "bg-white/10 font-bold text-white before:absolute before:left-0 before:h-full before:w-1 before:bg-[#c9a24a]",
+                    "bg-white/14 font-bold text-white before:absolute before:left-0 before:h-full before:w-1 before:bg-[#ff8a3d]",
                 )}
               >
                 <Icon className="size-4 shrink-0" />
@@ -105,13 +106,13 @@ export function AdminShell({
           })}
         </nav>
 
-        <div className="mt-auto space-y-1 border-t border-white/10 pt-4">
+        <div className="relative mt-auto space-y-1 border-t border-white/15 pt-4">
           <Link
             href="/certificate/admin/settings/"
             className={cn(
-              "relative flex items-center gap-3 px-6 py-4 text-sm font-semibold text-[#d9d9d9] transition hover:bg-white/8 hover:text-[#c9a24a]",
+              "relative flex items-center gap-3 px-6 py-4 text-sm font-semibold text-white/75 transition hover:bg-white/10 hover:text-white",
               isActive(pathname, "/certificate/admin/settings/") &&
-                "bg-white/10 font-bold text-white before:absolute before:left-0 before:h-full before:w-1 before:bg-[#c9a24a]",
+                "bg-white/14 font-bold text-white before:absolute before:left-0 before:h-full before:w-1 before:bg-[#ff8a3d]",
             )}
           >
             <Settings className="size-4 shrink-0" />
@@ -121,14 +122,14 @@ export function AdminShell({
             <p className="font-display text-sm font-bold tracking-wide">
               {user.fullName}
             </p>
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#c9a24a]">
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#ffb087]">
               {user.role === "admin" ? "SUPER_ADMIN" : "OPERATOR"}
             </p>
           </div>
           <button
             type="button"
             onClick={logout}
-            className="flex w-full items-center gap-3 px-6 py-4 text-sm font-semibold text-[#d9d9d9] transition hover:bg-white/8 hover:text-white"
+            className="flex w-full items-center gap-3 px-6 py-4 text-sm font-semibold text-white/75 transition hover:bg-white/10 hover:text-white"
           >
             <LogOut className="size-4" />
             Logout
@@ -151,22 +152,27 @@ export function AdminShell({
         </header>
 
         <div className="flex gap-2 overflow-x-auto border-b border-[#d7c8ad] bg-[#fffdf8] px-3 py-2 md:hidden">
-          {[...visible, { href: "/certificate/admin/settings/", label: "Settings", icon: Settings }].map(
-            (item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold",
-                  isActive(pathname, item.href)
-                    ? "bg-black text-white"
-                    : "bg-[#f6f1e7] text-[#171310]",
-                )}
-              >
-                {item.label}
-              </Link>
-            ),
-          )}
+          {[
+            ...visible,
+            {
+              href: "/certificate/admin/settings/",
+              label: "Settings",
+              icon: Settings,
+            },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold",
+                isActive(pathname, item.href)
+                  ? "bg-[#013baa] text-white"
+                  : "bg-[#f6f1e7] text-[#171310]",
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
         </div>
 
         <main className="min-h-[calc(100vh-3.5rem)] px-5 py-8 md:px-8 md:py-10">
