@@ -67,7 +67,33 @@ CERT_ADMIN_PASSWORD='your-strong-password'
 CERT_SESSION_SECRET='long-random-secret'
 ```
 
-On Vercel, add the same vars for **Production**, then Redeploy.
+### Vercel environment variables
+
+**Option A — Dashboard (fastest)**  
+Vercel project → **Settings → Environment Variables → Production** → add the keys from `.env.example`, then **Redeploy**.
+
+**Option B — CLI helper (from your laptop)**
+
+```bash
+cp .env.example .env.local   # fill real Firebase JSON + CERT_* values
+npx vercel login
+npx vercel link              # select the Skyhoist project
+npm run vercel:env           # pushes to production + preview + development
+npx vercel --prod            # redeploy
+```
+
+Required Production vars:
+
+| Variable | Notes |
+| --- | --- |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | Full service-account JSON |
+| `FIREBASE_STORAGE_BUCKET` | `skyhoist-engineering.firebasestorage.app` |
+| `FIREBASE_UPLOAD_BACKEND` | `storage` |
+| `FIREBASE_PROJECT_ID` | `skyhoist-engineering` (optional if JSON includes it) |
+| `CERT_ADMIN_USERNAME` | e.g. `admin` |
+| `CERT_ADMIN_PASSWORD` | strong password |
+| `CERT_ADMIN_EMAIL` | e.g. `admin@skyhoistservices.com` |
+| `CERT_SESSION_SECRET` | long random string |
 
 ### 3. Seed collections + admin
 
