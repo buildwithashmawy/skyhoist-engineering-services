@@ -22,8 +22,8 @@ export default async function VerifyCertificatePage({ params }: Props) {
           <Image
             src="/images/logo.png"
             alt="Skyhoist Engineering Services"
-            width={824}
-            height={548}
+            width={1537}
+            height={1023}
             className="h-auto w-44 object-contain"
             priority
           />

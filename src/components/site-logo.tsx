@@ -15,7 +15,7 @@ export function SiteLogo({
   priority = false,
   height = 56,
 }: SiteLogoProps) {
-  const width = Math.round(height * (824 / 548));
+  const width = Math.round(height * (1537 / 1023));
 
   return (
     <Image

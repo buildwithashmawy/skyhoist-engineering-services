@@ -74,8 +74,8 @@ export function AdminShell({
           <Image
             src="/images/logo.png"
             alt="Skyhoist"
-            width={824}
-            height={548}
+            width={1537}
+            height={1023}
             className="h-auto w-full object-contain"
             priority
           />

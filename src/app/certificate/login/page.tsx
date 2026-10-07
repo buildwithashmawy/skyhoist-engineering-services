@@ -49,26 +49,26 @@ export default function CertificateLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f5f1e8] px-4 py-10">
       <div className="grid w-full max-w-5xl overflow-hidden rounded-[1.8rem] bg-[#fffdf8] shadow-[0_30px_80px_rgba(23,19,16,0.16)] md:grid-cols-2">
-        <section className="relative flex flex-col justify-between bg-black px-8 py-10 text-white md:px-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(201,162,74,0.28),transparent_42%)]" />
+        <section className="relative flex flex-col justify-between bg-[linear-gradient(155deg,#013baa_0%,#007cc1_55%,#04b5ff_100%)] px-8 py-10 text-white md:px-10">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(224,89,20,0.28),transparent_44%)]" />
           <div className="relative">
             <Image
-              src="/images/logo.png"
+              src="/images/logo-white.png"
               alt="Skyhoist Engineering Services"
-              width={824}
-              height={548}
+              width={1538}
+              height={1023}
               className="h-auto w-56 object-contain md:w-64"
               priority
             />
           </div>
           <div className="relative mt-10 md:mt-0">
-            <p className="text-sm font-bold tracking-[0.22em] text-[#c9a24a]">
+            <p className="text-sm font-bold tracking-[0.22em] text-[#ffb087]">
               CERTIFICATE REGISTRY
             </p>
             <h1 className="mt-3 font-display text-3xl font-bold tracking-wide md:text-4xl">
               Admin Login
             </h1>
-            <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/70">
+            <p className="mt-3 max-w-sm text-sm leading-relaxed text-white/75">
               Use the saved username or email with the admin password to open
               the site.
             </p>

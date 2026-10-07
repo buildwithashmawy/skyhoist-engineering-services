@@ -43,8 +43,8 @@ export default function HomePage() {
               <Image
                 src="/images/logo.png"
                 alt={site.name}
-                width={824}
-                height={548}
+                width={1537}
+                height={1023}
                 priority
                 className="h-auto w-[min(100%,22rem)] object-contain drop-shadow-[0_18px_40px_rgba(0,0,0,0.45)] sm:w-[min(100%,28rem)] md:w-[min(100%,34rem)]"
                 sizes="(max-width: 640px) 22rem, (max-width: 768px) 28rem, 34rem"
