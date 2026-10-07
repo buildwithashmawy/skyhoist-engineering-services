@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "firebase:setup": "node scripts/setup-firebase.mjs",
-    "firebase:rules": "firebase deploy --only firestore:rules,storage"
+    "firebase:rules": "firebase deploy --only firestore:rules,storage",
+    "vercel:env": "node scripts/push-vercel-env.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

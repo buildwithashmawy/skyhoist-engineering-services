@@ -125,6 +125,7 @@ npm run firebase:rules   # after firebase login
 - `npm run lint` — ESLint
 - `npm run firebase:setup` — seed Firestore + Storage for the cert registry
 - `npm run firebase:rules` — deploy Firestore/Storage security rules
+- `npm run vercel:env` — push `.env.local` certificate/Firebase vars to Vercel
 
 ## Deploy notes
 

@@ -17,7 +17,7 @@ export default function ContactPage() {
       <section className="relative min-h-[48vh] overflow-hidden pt-24">
         <Image
           src="/images/offshore-sunset.jpg"
-          alt="Offshore platform at sunset"
+          alt="Dropped-object and site safety inspection"
           fill
           priority
           className="object-cover hero-media"

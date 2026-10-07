@@ -18,7 +18,7 @@ export default function AboutPage() {
       <section className="relative min-h-[58vh] overflow-hidden pt-24">
         <Image
           src="/images/plant-waterfront.jpg"
-          alt="Industrial plant along the waterfront"
+          alt="Rope-access inspection on industrial structures"
           fill
           priority
           className="object-cover hero-media"
@@ -66,7 +66,7 @@ export default function AboutPage() {
           <div className="relative aspect-[4/5] overflow-hidden rounded-[1.8rem] shadow-[0_30px_80px_rgba(15,28,92,0.16)]">
             <Image
               src="/images/process-towers.jpg"
-              alt="Process towers at golden hour"
+              alt="Industrial inspection and engineering operations"
               fill
               className="object-cover image-lift"
               sizes="(max-width: 768px) 100vw, 50vw"

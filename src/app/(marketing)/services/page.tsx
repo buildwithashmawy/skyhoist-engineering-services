@@ -17,7 +17,7 @@ export default function ServicesPage() {
       <section className="relative min-h-[52vh] overflow-hidden pt-24">
         <Image
           src="/images/refinery-night.jpg"
-          alt="Illuminated industrial facility at night"
+          alt="Lifting equipment inspection in the field"
           fill
           priority
           className="object-cover hero-media"

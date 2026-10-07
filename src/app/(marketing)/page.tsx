@@ -27,7 +27,7 @@ export default function HomePage() {
       <section className="relative min-h-[100svh] overflow-hidden">
         <Image
           src="/images/hero-rig-night.jpg"
-          alt="Industrial drilling operations at night"
+          alt="Skyhoist inspection team on industrial site operations"
           fill
           priority
           className="object-cover hero-media"
@@ -137,7 +137,7 @@ export default function HomePage() {
             <div className="relative aspect-[4/5] overflow-hidden rounded-[1.8rem] shadow-[0_30px_80px_rgba(15,28,92,0.18)]">
               <Image
                 src="/images/process-towers.jpg"
-                alt="Process towers at industrial facility"
+                alt="Industrial inspection and engineering operations"
                 fill
                 className="object-cover image-lift"
                 sizes="(max-width: 1024px) 100vw, 45vw"
@@ -224,7 +224,7 @@ export default function HomePage() {
       <section className="relative overflow-hidden py-24 md:py-32">
         <Image
           src="/images/offshore-vessel.jpg"
-          alt="Offshore engineering vessel at night"
+          alt="Rig inspection operations at an industrial facility"
           fill
           className="object-cover"
           sizes="100vw"
@@ -317,7 +317,7 @@ export default function HomePage() {
           <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] shadow-[0_30px_80px_rgba(15,28,92,0.2)]">
             <Image
               src="/images/industrial-dusk.jpg"
-              alt="Industrial skyline at dusk"
+              alt="Skyhoist engineering services in the field"
               fill
               className="object-cover drift-soft"
               sizes="100vw"

@@ -48,7 +48,7 @@ export const services: Service[] = [
       "Rope-access and facility inspections",
       "Clear reporting built for operational decisions",
     ],
-    image: "/images/rig-operations.jpg",
+    image: "/images/svc-inspection.jpg",
   },
   {
     slug: "calibration-and-testing",
@@ -63,7 +63,7 @@ export const services: Service[] = [
       "Traceable standards and documentation",
       "Field and workshop support options",
     ],
-    image: "/images/process-towers.jpg",
+    image: "/images/svc-calibration.jpg",
   },
   {
     slug: "training-development",
@@ -77,7 +77,7 @@ export const services: Service[] = [
       "Safety-focused curriculum design",
       "Programs tailored to site requirements",
     ],
-    image: "/images/industrial-dusk.jpg",
+    image: "/images/svc-training.jpg",
   },
   {
     slug: "fabrication-and-welding",
@@ -92,7 +92,7 @@ export const services: Service[] = [
       "Procedure-driven quality control",
       "Coordination with inspection and PWHT scopes",
     ],
-    image: "/images/refinery-night.jpg",
+    image: "/images/svc-fabrication.jpg",
   },
   {
     slug: "post-weld-heat-treatment",
@@ -107,7 +107,7 @@ export const services: Service[] = [
       "Documented process control",
       "Support for demanding plant materials",
     ],
-    image: "/images/plant-waterfront.jpg",
+    image: "/images/svc-pwht.jpg",
   },
   {
     slug: "wellhead-maintenance",
@@ -122,7 +122,7 @@ export const services: Service[] = [
       "Operational readiness checks",
       "Field-responsive technical coverage",
     ],
-    image: "/images/offshore-vessel.jpg",
+    image: "/images/svc-wellhead.jpg",
   },
   {
     slug: "qhse-management-system",
@@ -137,7 +137,7 @@ export const services: Service[] = [
       "Audit and continuous improvement support",
       "Clear accountability frameworks",
     ],
-    image: "/images/offshore-sunset.jpg",
+    image: "/images/svc-qhse.jpg",
   },
   {
     slug: "supply-and-logistics",
@@ -152,7 +152,7 @@ export const services: Service[] = [
       "Vendor and material readiness support",
       "Project-aligned supply planning",
     ],
-    image: "/images/hero-rig-night.jpg",
+    image: "/images/svc-supply.jpg",
   },
 ];
 
