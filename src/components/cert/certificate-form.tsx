@@ -99,6 +99,23 @@ export function CertificateForm({ certificateId }: Props) {
     });
   }
 
+  function removePage(page: number) {
+    setPages((prev) => {
+      const current = prev[page - 1];
+      if (!current) return prev;
+      if (
+        !confirm(
+          `Remove page ${String(page).padStart(2, "0")} file (${current.fileName})? Save the certificate to apply this change.`,
+        )
+      ) {
+        return prev;
+      }
+      const next = [...prev];
+      next[page - 1] = null;
+      return next;
+    });
+  }
+
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setLoading(true);
@@ -253,17 +270,36 @@ export function CertificateForm({ certificateId }: Props) {
                             </a>
                           ) : null}
                         </div>
-                        <label className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-black px-4 py-2 text-xs font-bold text-white">
-                          {uploadingPage === pageNo ? "Uploading…" : "Upload file"}
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept=".pdf,image/*"
-                            onChange={(e) =>
-                              void uploadPage(pageNo, e.target.files?.[0] || null)
-                            }
-                          />
-                        </label>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <label className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-black px-4 py-2 text-xs font-bold text-white">
+                            {uploadingPage === pageNo
+                              ? "Uploading…"
+                              : page
+                                ? "Replace file"
+                                : "Upload file"}
+                            <input
+                              type="file"
+                              className="hidden"
+                              accept=".pdf,image/*"
+                              onChange={(e) => {
+                                void uploadPage(
+                                  pageNo,
+                                  e.target.files?.[0] || null,
+                                );
+                                e.target.value = "";
+                              }}
+                            />
+                          </label>
+                          {page ? (
+                            <button
+                              type="button"
+                              onClick={() => removePage(pageNo)}
+                              className="inline-flex items-center justify-center rounded-xl border border-[#93000a]/30 bg-[#ffdad6] px-4 py-2 text-xs font-bold text-[#93000a] transition hover:bg-[#ffc7c1]"
+                            >
+                              Delete file
+                            </button>
+                          ) : null}
+                        </div>
                       </div>
                     );
                   })}
@@ -292,6 +328,7 @@ export function CertificateForm({ certificateId }: Props) {
             "Link every certificate to a customer already in the ledger.",
             "Keep the verification token unique — it powers the public QR page.",
             "Upload up to five document pages (PDF or image) for field verification.",
+            "Use Replace or Delete on a page file — then Save Changes to update the QR verification pages.",
             "Use Valid only when the certificate is ready for public checks.",
           ]}
         />

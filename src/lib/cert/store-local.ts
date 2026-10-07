@@ -262,6 +262,7 @@ export const localStore = {
       const idx = store.certificates.findIndex((c) => c.id === input.id);
       if (idx < 0) throw new Error("Certificate not found.");
       const prev = store.certificates[idx];
+      const nextPages = input.pages ?? prev.pages;
       store.certificates[idx] = {
         ...prev,
         certificateNo,
@@ -270,10 +271,24 @@ export const localStore = {
         status: input.status,
         notes: (input.notes || "").trim(),
         verificationToken: input.verificationToken?.trim() || prev.verificationToken,
-        pages: input.pages ?? prev.pages,
+        pages: nextPages,
         updatedAt: now,
       };
       await writeStore(store);
+      if (input.pages) {
+        const kept = new Set(nextPages.map((p) => p.storedName));
+        await Promise.all(
+          prev.pages
+            .filter((p) => !kept.has(p.storedName))
+            .map(async (p) => {
+              try {
+                await fs.unlink(path.join(UPLOAD_DIR, p.storedName));
+              } catch {
+                /* ignore */
+              }
+            }),
+        );
+      }
       return store.certificates[idx];
     }
 
@@ -348,6 +363,14 @@ export const localStore = {
 
   async readUpload(storedName: string) {
     return fs.readFile(path.join(UPLOAD_DIR, storedName));
+  },
+
+  async deleteUpload(storedName: string) {
+    try {
+      await fs.unlink(path.join(UPLOAD_DIR, storedName));
+    } catch {
+      /* ignore missing */
+    }
   },
 
   backend: "local" as const,

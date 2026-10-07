@@ -132,7 +132,7 @@ export const firebaseStore = {
   async deleteOperator(id: string, actorId: string) {
     const db = getDb();
     const snap = await db.collection(collections.users).doc(id).get();
-    if (!snap.exists) throw new Error("Operator not found.");
+    if (!snap.exists) throw new Error("Inspector not found.");
     const target = snap.data() as CertUser;
     if (target.role === "admin") throw new Error("Admin accounts cannot be removed here.");
     if (target.id === actorId) throw new Error("You cannot remove your own account.");
@@ -312,6 +312,7 @@ export const firebaseStore = {
       const snap = await ref.get();
       if (!snap.exists) throw new Error("Certificate not found.");
       const prev = snap.data() as Certificate;
+      const nextPages = input.pages ?? prev.pages;
       const next: Certificate = {
         ...prev,
         certificateNo,
@@ -320,10 +321,24 @@ export const firebaseStore = {
         status: input.status,
         notes: (input.notes || "").trim(),
         verificationToken: input.verificationToken?.trim() || prev.verificationToken,
-        pages: input.pages ?? prev.pages,
+        pages: nextPages,
         updatedAt: now,
       };
       await ref.set(next);
+      if (input.pages) {
+        const kept = new Set(nextPages.map((p) => p.storedName));
+        await Promise.all(
+          prev.pages
+            .filter((p) => !kept.has(p.storedName))
+            .map(async (p) => {
+              try {
+                await deleteUpload(p.storedName);
+              } catch {
+                /* ignore */
+              }
+            }),
+        );
+      }
       return next;
     }
 
@@ -431,6 +446,10 @@ export const firebaseStore = {
 
   async readUpload(storedName: string) {
     return readUploadBytes(storedName);
+  },
+
+  async deleteUpload(storedName: string) {
+    await deleteUpload(storedName);
   },
 };
 

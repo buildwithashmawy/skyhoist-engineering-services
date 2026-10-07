@@ -99,6 +99,10 @@ export async function readUpload(storedName: string) {
   return active().readUpload(storedName);
 }
 
+export async function deleteUpload(storedName: string) {
+  return active().deleteUpload(storedName);
+}
+
 export function getStoreBackend() {
   return isFirebaseConfigured() ? "firebase" : "local";
 }
