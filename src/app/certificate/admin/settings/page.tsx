@@ -78,14 +78,14 @@ export default function SettingsPage() {
                     Role
                   </dt>
                   <dd className="mt-1 font-bold uppercase tracking-[0.14em] text-[#c9a24a]">
-                    {currentUser?.role === "admin" ? "SUPER_ADMIN" : "OPERATOR"}
+                    {currentUser?.role === "admin" ? "SUPER_ADMIN" : "INSPECTOR"}
                   </dd>
                 </div>
               </dl>
               {currentUser?.role === "admin" ? (
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <Link href="/certificate/admin/operators/">
-                    <PrimaryButton type="button">Add Operator</PrimaryButton>
+                  <Link href="/certificate/admin/inspectors/">
+                    <PrimaryButton type="button">Add Inspector</PrimaryButton>
                   </Link>
                 </div>
               ) : null}

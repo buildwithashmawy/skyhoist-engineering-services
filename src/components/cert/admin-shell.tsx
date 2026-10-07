@@ -17,8 +17,8 @@ import type { SessionUser } from "@/lib/cert/types";
 
 const links = [
   {
-    href: "/certificate/admin/operators/",
-    label: "Add Operator",
+    href: "/certificate/admin/inspectors/",
+    label: "Add Inspector",
     icon: ShieldUser,
     adminOnly: true,
   },
@@ -123,7 +123,7 @@ export function AdminShell({
               {user.fullName}
             </p>
             <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#ffb087]">
-              {user.role === "admin" ? "SUPER_ADMIN" : "OPERATOR"}
+              {user.role === "admin" ? "SUPER_ADMIN" : "INSPECTOR"}
             </p>
           </div>
           <button

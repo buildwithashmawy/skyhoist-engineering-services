@@ -15,7 +15,7 @@ import {
   SecondaryButton,
 } from "@/components/cert/ui";
 
-type Operator = {
+type Inspector = {
   id: string;
   fullName: string;
   username: string;
@@ -24,7 +24,7 @@ type Operator = {
   createdAt: string;
 };
 
-export function OperatorsPanel({ operators }: { operators: Operator[] }) {
+export function InspectorsPanel({ inspectors }: { inspectors: Inspector[] }) {
   const router = useRouter();
   const [formError, setFormError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -45,7 +45,7 @@ export function OperatorsPanel({ operators }: { operators: Operator[] }) {
     const data = await res.json();
     setSaving(false);
     if (!res.ok) {
-      setFormError(data.error || "Could not create operator.");
+      setFormError(data.error || "Could not create inspector.");
       return;
     }
     setFullName("");
@@ -56,11 +56,11 @@ export function OperatorsPanel({ operators }: { operators: Operator[] }) {
   }
 
   async function remove(id: string) {
-    if (!confirm("Remove this operator account?")) return;
+    if (!confirm("Remove this inspector account?")) return;
     const res = await fetch(`/api/cert/operators/${id}/`, { method: "DELETE" });
     const data = await res.json();
     if (!res.ok) {
-      alert(data.error || "Could not remove operator.");
+      alert(data.error || "Could not remove inspector.");
       return;
     }
     router.refresh();
@@ -70,12 +70,12 @@ export function OperatorsPanel({ operators }: { operators: Operator[] }) {
     <>
       <PageHeader
         eyebrow="ACCESS CONTROL"
-        title="Add Operator Account"
-        description="Create another operator who can access the dashboard with their own username or email and password. No email invite is sent."
+        title="Add Inspector Account"
+        description="Create another inspector who can access the dashboard with their own username or email and password. No email invite is sent."
         breadcrumb={[
           { label: "Security", href: "/certificate/admin/settings/" },
           { label: "Admin Access", href: "/certificate/admin/settings/" },
-          { label: "Add Operator" },
+          { label: "Add Inspector" },
         ]}
       />
 
@@ -93,7 +93,7 @@ export function OperatorsPanel({ operators }: { operators: Operator[] }) {
                   className={inputClass}
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Operator full name"
+                  placeholder="Inspector full name"
                   required
                 />
               </Field>
@@ -112,7 +112,7 @@ export function OperatorsPanel({ operators }: { operators: Operator[] }) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="operator@example.com"
+                  placeholder="inspector@example.com"
                   required
                 />
               </Field>
@@ -131,7 +131,7 @@ export function OperatorsPanel({ operators }: { operators: Operator[] }) {
               </Field>
               <div className="flex flex-wrap gap-3 pt-2">
                 <PrimaryButton type="submit" disabled={saving}>
-                  {saving ? "Creating…" : "Create Operator"}
+                  {saving ? "Creating…" : "Create Inspector"}
                 </PrimaryButton>
                 <Link href="/certificate/admin/settings/">
                   <SecondaryButton type="button">Cancel</SecondaryButton>
@@ -145,19 +145,19 @@ export function OperatorsPanel({ operators }: { operators: Operator[] }) {
           <ComplianceCard
             title="Access Control"
             items={[
-              "Each operator should have a separate account for traceability.",
+              "Each inspector should have a separate account for traceability.",
               "Passwords must be at least 10 characters with mixed case and numbers.",
-              "Operators can manage customers and certificates, but not other users.",
-              "Admins can remove operators at any time from the list below.",
+              "Inspectors can manage customers and certificates, but not other users.",
+              "Admins can remove inspectors at any time from the list below.",
             ]}
           />
 
           <Panel>
-            {operators.length === 0 ? (
+            {inspectors.length === 0 ? (
               <div className="p-8 text-center">
-                <p className="font-display text-xl font-bold">No operators yet</p>
+                <p className="font-display text-xl font-bold">No inspectors yet</p>
                 <p className="mt-2 text-sm text-[#5c503c]">
-                  Add the first operator from the form.
+                  Add the first inspector from the form.
                 </p>
               </div>
             ) : (
@@ -172,21 +172,21 @@ export function OperatorsPanel({ operators }: { operators: Operator[] }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {operators.map((operator) => (
-                      <tr key={operator.id} className="border-b border-[#efe6d4]">
+                    {inspectors.map((inspector) => (
+                      <tr key={inspector.id} className="border-b border-[#efe6d4]">
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-3">
-                            <Monogram name={operator.fullName} />
-                            <span className="font-semibold">{operator.fullName}</span>
+                            <Monogram name={inspector.fullName} />
+                            <span className="font-semibold">{inspector.fullName}</span>
                           </div>
                         </td>
-                        <td className="px-5 py-4">{operator.username}</td>
-                        <td className="px-5 py-4 text-[#5c503c]">{operator.email}</td>
+                        <td className="px-5 py-4">{inspector.username}</td>
+                        <td className="px-5 py-4 text-[#5c503c]">{inspector.email}</td>
                         <td className="px-5 py-4">
                           <SecondaryButton
                             type="button"
                             className="min-h-9 px-3"
-                            onClick={() => void remove(operator.id)}
+                            onClick={() => void remove(inspector.id)}
                           >
                             Remove
                           </SecondaryButton>

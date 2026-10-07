@@ -79,7 +79,7 @@ export default function CertificateLoginPage() {
                 Sign in to manage certificates
               </h1>
               <p className="mt-4 text-sm leading-relaxed text-white/78 sm:text-base">
-                Private operator access for customers, certificate records, and
+                Private inspector access for customers, certificate records, and
                 public verification tokens.
               </p>
               <ul className="mt-8 space-y-2 text-sm text-white/70">
@@ -89,7 +89,7 @@ export default function CertificateLoginPage() {
                 </li>
                 <li className="flex gap-2">
                   <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#ff8a3d]" />
-                  Operator access controlled by admin
+                  Inspector access controlled by admin
                 </li>
                 <li className="flex gap-2">
                   <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#ff8a3d]" />

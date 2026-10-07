@@ -115,7 +115,7 @@ export default function NewCustomerPage() {
           title="Quick Guidelines"
           items={[
             "Use the legal company name exactly as it should appear on certificates.",
-            "Email and phone are optional but help operators reach the client later.",
+            "Email and phone are optional but help inspectors reach the client later.",
             "Mark Flagged if the company needs review before new certificates.",
             "After saving, the company appears in the Add Certificate dropdown.",
           ]}

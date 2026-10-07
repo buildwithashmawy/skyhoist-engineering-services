@@ -127,7 +127,7 @@ export const localStore = {
   async deleteOperator(id: string, actorId: string) {
     const store = await readStore();
     const target = store.users.find((u) => u.id === id);
-    if (!target) throw new Error("Operator not found.");
+    if (!target) throw new Error("Inspector not found.");
     if (target.role === "admin") throw new Error("Admin accounts cannot be removed here.");
     if (target.id === actorId) throw new Error("You cannot remove your own account.");
     store.users = store.users.filter((u) => u.id !== id);

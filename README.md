@@ -38,8 +38,8 @@ Not linked from the marketing site. Open by URL only:
 
 Roles:
 
-- **Admin** — customers, certificates, settings, add/remove operators (password-based, no email invite)
-- **Operator** — customers and certificates only
+- **Admin** — customers, certificates, settings, add/remove inspectors (password-based, no email invite)
+- **Inspector** — customers and certificates only
 
 Public certificate verification (also unlisted): `/verify/<token>/`
 
@@ -79,7 +79,7 @@ This writes:
 
 | Collection / path | Purpose |
 | --- | --- |
-| `certUsers` | Admins + operators |
+| `certUsers` | Admins + inspectors |
 | `certCustomers` | Customers |
 | `certCertificates` | Certificates + verification tokens |
 | `cert-uploads/` (Storage) | Certificate page PDFs/images (`FIREBASE_UPLOAD_BACKEND=storage`) |
