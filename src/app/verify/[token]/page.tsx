@@ -18,16 +18,16 @@ export default async function VerifyCertificatePage({ params }: Props) {
   return (
     <div className="min-h-screen bg-[#f5f1e8] px-4 py-10">
       <div className="mx-auto max-w-3xl overflow-hidden rounded-[1.6rem] border border-[#d7c8ad] bg-[#fffdf8] shadow-[0_24px_60px_rgba(23,19,16,0.08)]">
-        <div className="bg-black px-6 py-6 text-white md:px-8">
+        <div className="bg-[#013baa] px-6 py-6 text-white md:px-8">
           <Image
-            src="/images/logo.png"
+            src="/images/logo-white.png"
             alt="Skyhoist Engineering Services"
             width={1537}
             height={1023}
             className="h-auto w-44 object-contain"
             priority
           />
-          <p className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-[#c9a24a]">
+          <p className="mt-4 text-xs font-bold uppercase tracking-[0.22em] text-[#ffb087]">
             Public Verification
           </p>
           <h1 className="mt-2 font-display text-3xl font-bold tracking-wide">

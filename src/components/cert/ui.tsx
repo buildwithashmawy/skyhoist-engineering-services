@@ -135,7 +135,7 @@ export function PrimaryButton({
   return (
     <button
       className={cn(
-        "inline-flex min-h-11 items-center justify-center rounded-xl bg-black px-5 text-sm font-bold text-white transition hover:bg-[#2a221a] disabled:opacity-60",
+        "inline-flex min-h-11 items-center justify-center rounded-xl bg-[#013baa] px-5 text-sm font-bold text-white transition hover:bg-[#012f8a] disabled:opacity-60",
         className,
       )}
       {...props}
@@ -171,7 +171,7 @@ export function Monogram({ name }: { name: string }) {
     .map((part) => part[0]?.toUpperCase() || "")
     .join("");
   return (
-    <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-[#2a221a] text-xs font-bold tracking-wide text-[#ffe7ad]">
+    <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-[#013baa] text-xs font-bold tracking-wide text-white">
       {initials || "?"}
     </span>
   );
@@ -210,14 +210,14 @@ export function ComplianceCard({
   items: string[];
 }) {
   return (
-    <div className="rounded-2xl bg-[#171310] px-5 py-5 text-white shadow-[0_18px_40px_rgba(23,19,16,0.18)]">
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#c9a24a]">
+    <div className="rounded-2xl bg-[#013baa] px-5 py-5 text-white shadow-[0_18px_40px_rgba(1,59,170,0.22)]">
+      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#ffb087]">
         {title}
       </p>
       <ul className="mt-4 space-y-3 text-sm text-white/80">
         {items.map((item) => (
           <li key={item} className="flex gap-2.5">
-            <span className="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-[#c9a24a]/20 text-[0.65rem] text-[#ffe7ad]">
+            <span className="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-white/15 text-[0.65rem] text-[#ffb087]">
               ✓
             </span>
             <span>{item}</span>

@@ -276,7 +276,7 @@ export function CertificateForm({ certificateId }: Props) {
                           ) : null}
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <label className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-black px-4 py-2 text-xs font-bold text-white">
+                          <label className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-[#013baa] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#012f8a]">
                             {uploadingPage === pageNo
                               ? "Uploading…"
                               : page
