@@ -36,133 +36,33 @@ export type Service = {
   image: string;
 };
 
+/**
+ * Service catalog aligned to platform-pps.com (same set and order).
+ * Technical Differentiation is omitted — it is a company values page, not a service line.
+ */
 export const services: Service[] = [
   {
     slug: "inspection-services",
     title: "Inspection Services",
     summary:
-      "Independent inspection programs that help facilities work with confidence.",
+      "Professional inspection support for elevators, escalators, and safety-critical systems.",
     description:
-      "Skyhoist provides independent inspection and verification programs that help you control quality, meet regulatory requirements, and keep industrial assets safe—with clear reporting for operational decisions.",
+      "Skyhoist provides independent inspection and verification for people-elevation and industrial systems—including commissioning, periodic inspections, safety-component testing, and technical assistance—so components and systems meet regional and international safety standards.",
     points: [
-      "Third-party inspection and verification coverage",
-      "Commissioning and periodic inspection support",
-      "Safety-component testing and technical assistance",
-      "Clear reporting built for operational decisions",
+      "Elevator and escalator inspection and certification",
+      "Commissioning and periodic safety inspections",
+      "Hazard analysis and safety-component testing",
+      "Condition assessment and conformity reporting",
     ],
     image: "/images/svc-inspection.jpg",
-  },
-  {
-    slug: "calibration-and-testing",
-    title: "Calibration & Testing",
-    summary:
-      "Pressure, measurement, and testing support built around reliable standards.",
-    description:
-      "Our calibration and testing teams help keep critical instruments and systems within tolerance, reducing measurement risk and supporting safer, more accurate industrial performance.",
-    points: [
-      "Pressure and measurement calibration",
-      "Functional and acceptance testing",
-      "Traceable standards and documentation",
-      "Field and workshop support options",
-    ],
-    image: "/images/svc-calibration.jpg",
-  },
-  {
-    slug: "training-development",
-    title: "Training & Development",
-    summary: "Practical technical training for energy and industrial teams.",
-    description:
-      "We deliver hands-on and digital training programs that strengthen technical competency, safety awareness, and field readiness for crews working under real operational pressure.",
-    points: [
-      "Face-to-face and digital learning formats",
-      "Technical competency development",
-      "Safety-focused curriculum design",
-      "Programs tailored to site requirements",
-    ],
-    image: "/images/svc-training.jpg",
-  },
-  {
-    slug: "fabrication-and-welding",
-    title: "Fabrication & Welding",
-    summary:
-      "Precision fabrication and coded welding support for plant requirements.",
-    description:
-      "From preparation through final inspection, Skyhoist supports fabrication and welding scopes that demand dimensional accuracy, coded procedures, and dependable quality control.",
-    points: [
-      "Coded welding and fabrication support",
-      "Plant and site-ready workmanship",
-      "Procedure-driven quality control",
-      "Coordination with inspection and PWHT scopes",
-    ],
-    image: "/images/svc-fabrication.jpg",
-  },
-  {
-    slug: "post-weld-heat-treatment",
-    title: "Post Weld Heat Treatment",
-    summary:
-      "Controlled heat treatment that protects weld integrity and material performance.",
-    description:
-      "Our PWHT services help relieve residual stress and protect material performance after welding, supporting compliance and long-term weld integrity on critical assemblies.",
-    points: [
-      "Controlled thermal cycles",
-      "Weld integrity and stress relief",
-      "Documented process control",
-      "Support for demanding plant materials",
-    ],
-    image: "/images/svc-pwht.jpg",
-  },
-  {
-    slug: "wellhead-maintenance",
-    title: "Wellhead Maintenance",
-    summary:
-      "Maintenance and inspection support for critical wellhead equipment.",
-    description:
-      "Skyhoist supports wellhead reliability with maintenance, inspection, and readiness services designed for high-consequence oil and gas environments.",
-    points: [
-      "Wellhead equipment maintenance",
-      "Integrity-focused inspection support",
-      "Operational readiness checks",
-      "Field-responsive technical coverage",
-    ],
-    image: "/images/svc-wellhead.jpg",
-  },
-  {
-    slug: "qhse-management-system",
-    title: "QHSE Management System",
-    summary:
-      "Practical quality, health, safety, and environmental control systems.",
-    description:
-      "We help industrial teams build and maintain QHSE systems that are usable in the field—improving accountability, reducing risk, and strengthening compliance culture.",
-    points: [
-      "Quality and safety system design",
-      "Practical field-ready controls",
-      "Audit and continuous improvement support",
-      "Clear accountability frameworks",
-    ],
-    image: "/images/svc-qhse.jpg",
-  },
-  {
-    slug: "supply-and-logistics",
-    title: "Supply & Logistics",
-    summary:
-      "Sourcing, procurement, and delivery coordination for industrial operations.",
-    description:
-      "Skyhoist coordinates industrial supply and logistics so materials, tools, and equipment arrive when operations need them—reducing delay and keeping projects moving.",
-    points: [
-      "Industrial sourcing and procurement",
-      "Delivery and logistics coordination",
-      "Vendor and material readiness support",
-      "Project-aligned supply planning",
-    ],
-    image: "/images/svc-supply.jpg",
   },
   {
     slug: "rig-inspection",
     title: "Rig Inspection",
     summary:
-      "Condition monitoring and integrity checks for rigs, drill pipe, and tubular equipment.",
+      "Cost-effective inspection to keep rigs, drill pipe, and tubular equipment safe and reliable.",
     description:
-      "Skyhoist helps operators and drilling contractors keep rigs safe and reliable—monitoring condition, detecting corrosion and fatigue before failure, and verifying operational integrity against current industry standards.",
+      "Skyhoist helps operators and drilling contractors monitor rig and tubular condition, detect corrosion and fatigue before failure, and verify operational integrity against current industry standards.",
     points: [
       "Rig, drill-pipe, and tubular condition monitoring",
       "Detection of corrosion, wall loss, and fatigue cracks",
@@ -188,7 +88,7 @@ export const services: Service[] = [
   },
   {
     slug: "ndt-inspection",
-    title: "NDT Inspection",
+    title: "NDT Inspection Services",
     summary:
       "Effective non-destructive testing methods for equipment and asset integrity.",
     description:
@@ -247,19 +147,109 @@ export const services: Service[] = [
     image: "/images/svc-rope.jpg",
   },
   {
-    slug: "elevator-escalator-inspection",
-    title: "Elevator & Escalator Inspection",
+    slug: "calibration-and-testing",
+    title: "Calibration & Testing",
     summary:
-      "Commissioning, periodic inspection, and certification for people-elevation systems.",
+      "Wide-range pressure device calibration using high-precision reference standards.",
     description:
-      "Sensitive passenger systems need independent supervision. Skyhoist supports elevator and escalator safety through document review, hazard analysis, component testing, and periodic inspections that help plan maintenance and reduce downtime.",
+      "Our calibration and testing teams help keep critical instruments and systems within tolerance, reducing measurement risk and supporting safer, more accurate industrial performance.",
     points: [
-      "Commissioning and periodic safety inspections",
-      "Safety-component testing and conformity reporting",
-      "Condition assessment of aging elevator systems",
-      "Faster electronic testing that shortens asset downtime",
+      "Pressure and measurement calibration",
+      "Functional and acceptance testing",
+      "Traceable standards and documentation",
+      "Field and workshop support options",
     ],
-    image: "/images/svc-elevator.jpg",
+    image: "/images/svc-calibration.jpg",
+  },
+  {
+    slug: "training-development",
+    title: "Training & Development",
+    summary:
+      "Public, in-house, eLearning, virtual, and blended learning for industrial teams.",
+    description:
+      "We deliver hands-on and digital training programs that strengthen technical competency, safety awareness, and field readiness for crews working under real operational pressure.",
+    points: [
+      "Face-to-face and digital learning formats",
+      "Technical competency development",
+      "Safety-focused curriculum design",
+      "Programs tailored to site requirements",
+    ],
+    image: "/images/svc-training.jpg",
+  },
+  {
+    slug: "post-weld-heat-treatment",
+    title: "Post Weld Heat Treatment",
+    summary:
+      "PWHT to normalize welds so grain structure can handle severe environments.",
+    description:
+      "Our PWHT services help relieve residual stress and protect material performance after welding, supporting compliance and long-term weld integrity on critical assemblies.",
+    points: [
+      "Controlled thermal cycles",
+      "Weld integrity and stress relief",
+      "Documented process control",
+      "Support for demanding plant materials",
+    ],
+    image: "/images/svc-pwht.jpg",
+  },
+  {
+    slug: "fabrication-and-welding",
+    title: "Fabrication & Welding",
+    summary:
+      "Precision metal products, structural steel, sheet metal, and coded piping spool fabrication.",
+    description:
+      "From preparation through final inspection, Skyhoist supports fabrication and welding scopes that demand dimensional accuracy, coded procedures, and dependable quality control.",
+    points: [
+      "Coded welding and fabrication support",
+      "Plant and site-ready workmanship",
+      "Procedure-driven quality control",
+      "Coordination with inspection and PWHT scopes",
+    ],
+    image: "/images/svc-fabrication.jpg",
+  },
+  {
+    slug: "supply-and-logistics",
+    title: "Supply & Logistics",
+    summary:
+      "Sourcing that drives better price, service, and delivery across your supplier base.",
+    description:
+      "Skyhoist coordinates industrial supply and logistics so materials, tools, and equipment arrive when operations need them—reducing delay and keeping projects moving.",
+    points: [
+      "Industrial sourcing and procurement",
+      "Delivery and logistics coordination",
+      "Vendor and material readiness support",
+      "Project-aligned supply planning",
+    ],
+    image: "/images/svc-supply.jpg",
+  },
+  {
+    slug: "wellhead-maintenance",
+    title: "Wellhead Maintenance",
+    summary:
+      "Complete wellhead preventive and integrity maintenance for oil, gas, and injection wells.",
+    description:
+      "Skyhoist supports wellhead reliability with maintenance, inspection, and readiness services designed for high-consequence oil and gas environments—onshore and offshore.",
+    points: [
+      "Preventive and routine wellhead maintenance programs",
+      "Valve testing, lubrication, and sealant injection",
+      "Non-routine repair, hot tapping, and specialty sealants",
+      "Documented field records and integrity reporting",
+    ],
+    image: "/images/svc-wellhead.jpg",
+  },
+  {
+    slug: "qhse-management-system",
+    title: "QHSE Management System",
+    summary:
+      "Practical quality, health, safety, and environmental control systems.",
+    description:
+      "We help industrial teams build and maintain QHSE systems that are usable in the field—improving accountability, reducing risk, and strengthening compliance culture.",
+    points: [
+      "Quality and safety system design",
+      "Practical field-ready controls",
+      "Audit and continuous improvement support",
+      "Clear accountability frameworks",
+    ],
+    image: "/images/svc-qhse.jpg",
   },
 ];
 

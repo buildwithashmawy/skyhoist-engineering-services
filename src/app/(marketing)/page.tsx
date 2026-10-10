@@ -13,11 +13,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { getWhatsAppUrl, services, site, values } from "@/lib/site";
 
-const featured = services.slice(0, 6);
-
 const stats = [
   { value: 95, suffix: "%", label: "Certified systems mindset" },
-  { value: 15, suffix: "+", label: "Core service lines" },
+  { value: services.length, suffix: "", label: "Core service lines" },
   { value: 24, suffix: "/7", label: "Operational readiness" },
 ];
 
