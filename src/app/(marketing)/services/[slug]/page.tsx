@@ -62,24 +62,78 @@ export default async function ServiceDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-24 md:grid-cols-[1.4fr_0.8fr] md:px-8 md:py-32">
-        <FadeUp>
-          <h2 className="font-display text-3xl font-bold tracking-wide text-[var(--brand-ink)] md:text-4xl">
-            Scope overview
-          </h2>
-          <p className="mt-4 text-lg leading-relaxed text-[var(--brand-steel)]">
-            {service.description}
-          </p>
-          <ul className="mt-8 space-y-4">
-            {service.points.map((point) => (
-              <li key={point} className="flex gap-3 text-[var(--brand-ink)]">
-                <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-[var(--brand-orange)]" />
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-        </FadeUp>
-        <FadeUp delay={0.12}>
+      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-16 md:grid-cols-[1.45fr_0.75fr] md:px-8 md:py-24">
+        <div className="space-y-14">
+          <FadeUp>
+            <div className="section-rule mb-6" />
+            <h2 className="font-display text-3xl font-bold tracking-wide text-[var(--brand-ink)] md:text-4xl">
+              Scope overview
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-[var(--brand-steel)]">
+              {service.description}
+            </p>
+            <ul className="mt-8 space-y-3">
+              {service.points.map((point) => (
+                <li key={point} className="flex gap-3 text-[var(--brand-ink)]">
+                  <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-[var(--brand-orange)]" />
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </FadeUp>
+
+          {service.outcomes.length ? (
+            <FadeUp>
+              <h2 className="font-display text-3xl font-bold tracking-wide text-[var(--brand-ink)] md:text-4xl">
+                How we help
+              </h2>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                {service.outcomes.map((outcome, index) => (
+                  <div
+                    key={outcome}
+                    className="border-t-2 border-[var(--brand-orange)] pt-4"
+                  >
+                    <p className="text-xs font-bold tracking-[0.2em] text-[var(--brand-orange)]">
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <p className="mt-2 text-[var(--brand-ink)]">{outcome}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeUp>
+          ) : null}
+
+          {service.sections.map((section) => (
+            <FadeUp key={section.heading}>
+              <h2 className="font-display text-2xl font-bold tracking-wide text-[var(--brand-ink)] md:text-3xl">
+                {section.heading}
+              </h2>
+              {section.paragraphs?.map((paragraph) => (
+                <p
+                  key={paragraph}
+                  className="mt-4 text-base leading-relaxed text-[var(--brand-steel)] md:text-lg"
+                >
+                  {paragraph}
+                </p>
+              ))}
+              {section.bullets?.length ? (
+                <ul className="mt-5 space-y-3">
+                  {section.bullets.map((bullet) => (
+                    <li
+                      key={bullet}
+                      className="flex gap-3 text-[var(--brand-ink)]"
+                    >
+                      <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-[var(--brand-orange)]" />
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </FadeUp>
+          ))}
+        </div>
+
+        <FadeUp delay={0.12} className="md:sticky md:top-28 md:self-start">
           <div className="rounded-[1.5rem] bg-[var(--brand-navy)] p-8 text-white">
             <h3 className="font-display text-2xl font-bold tracking-wide">
               Need this service?
@@ -113,6 +167,37 @@ export default async function ServiceDetailPage({ params }: Props) {
                 Request a proposal
               </Link>
             </div>
+          </div>
+
+          <div className="mt-5 rounded-[1.5rem] border border-[var(--border)] bg-white p-6">
+            <p className="text-xs font-bold tracking-[0.2em] text-[var(--brand-orange)]">
+              RELATED SERVICES
+            </p>
+            <ul className="mt-4 space-y-2">
+              {(() => {
+                const index = services.findIndex((item) => item.slug === service.slug);
+                const related = [
+                  ...services.slice(index + 1),
+                  ...services.slice(0, index),
+                ].slice(0, 5);
+                return related.map((item) => (
+                  <li key={item.slug}>
+                    <Link
+                      href={`/services/${item.slug}`}
+                      className="text-sm font-semibold text-[var(--brand-blue-deep)] transition hover:text-[var(--brand-orange)]"
+                    >
+                      {item.title}
+                    </Link>
+                  </li>
+                ));
+              })()}
+            </ul>
+            <Link
+              href="/services"
+              className="mt-5 inline-flex text-sm font-semibold text-[var(--brand-ink)] underline-offset-2 hover:underline"
+            >
+              View all services
+            </Link>
           </div>
         </FadeUp>
       </section>
