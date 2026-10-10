@@ -6,8 +6,11 @@ Corporate website for **Skyhoist Engineering Services** — a Next.js rebuild of
 
 - Next.js (App Router) + TypeScript
 - Tailwind CSS + shadcn/ui
+- **GSAP** scroll and entrance animations on the marketing site
 - **Firebase Firestore + Storage** for the certificate registry (falls back to local JSON when Firebase env vars are unset)
 - Brand assets from the Skyhoist logo pack and industrial photography
+
+The certificate portal is an **organization-level** shared registry: every admin and inspector sees the same customers and certificates (`createdById` is audit-only).
 
 ## Contact
 

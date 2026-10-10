@@ -99,9 +99,9 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
   return (
     <>
       <PageHeader
-        eyebrow="ARCHIVE"
+        eyebrow="ORGANIZATION ARCHIVE"
         title="All Certificates"
-        description="Every row below is ready for public verification through its secure token."
+        description="Shared organization registry — every certificate is visible to all admins and inspectors, ready for public verification through its secure token."
         breadcrumb={[{ label: "Archive" }, { label: "Certificates" }]}
         actions={
           <>

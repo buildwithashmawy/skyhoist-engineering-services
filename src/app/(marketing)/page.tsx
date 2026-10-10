@@ -5,6 +5,7 @@ import {
   CountUp,
   FadeUp,
   HeroEnter,
+  ParallaxMedia,
   Stagger,
   StaggerItem,
 } from "@/components/motion";
@@ -24,14 +25,16 @@ export default function HomePage() {
     <>
       {/* HERO */}
       <section className="relative min-h-[100svh] overflow-hidden">
-        <Image
-          src="/images/hero-rig-night.jpg"
-          alt="Skyhoist inspection team on industrial site operations"
-          fill
-          priority
-          className="object-cover hero-media"
-          sizes="100vw"
-        />
+        <ParallaxMedia className="absolute inset-0 scale-110">
+          <Image
+            src="/images/hero-rig-night.jpg"
+            alt="Skyhoist inspection team on industrial site operations"
+            fill
+            priority
+            className="object-cover hero-media"
+            sizes="100vw"
+          />
+        </ParallaxMedia>
         <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(15,28,92,0.88)_0%,rgba(15,28,92,0.55)_52%,rgba(15,28,92,0.25)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_35%,rgba(0,124,193,0.28),transparent_42%)]" />
         <div className="grain absolute inset-0" />

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { FadeUp, Stagger, StaggerItem } from "@/components/motion";
+import { FadeUp, ParallaxMedia, Stagger, StaggerItem } from "@/components/motion";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { site, values } from "@/lib/site";
@@ -16,14 +16,16 @@ export default function AboutPage() {
   return (
     <>
       <section className="relative min-h-[58vh] overflow-hidden pt-24">
-        <Image
-          src="/images/plant-waterfront.jpg"
-          alt="Rope-access inspection on industrial structures"
-          fill
-          priority
-          className="object-cover hero-media"
-          sizes="100vw"
-        />
+        <ParallaxMedia className="absolute inset-0 scale-110">
+          <Image
+            src="/images/plant-waterfront.jpg"
+            alt="Rope-access inspection on industrial structures"
+            fill
+            priority
+            className="object-cover hero-media"
+            sizes="100vw"
+          />
+        </ParallaxMedia>
         <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(15,28,92,0.88),rgba(15,28,92,0.4))]" />
         <div className="grain absolute inset-0" />
         <div className="relative mx-auto flex min-h-[58vh] max-w-7xl items-end px-5 pb-14 md:px-8">

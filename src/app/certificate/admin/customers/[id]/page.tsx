@@ -41,12 +41,21 @@ export default function EditCustomerPage() {
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
-    setLoading(true);
     setError("");
+    if (!fullName.trim()) {
+      setError("Company name is required.");
+      return;
+    }
+    setLoading(true);
     const res = await fetch(`/api/cert/customers/${params.id}/`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fullName, email, phone, status }),
+      body: JSON.stringify({
+        fullName: fullName.trim(),
+        email,
+        phone,
+        status,
+      }),
     });
     const data = await res.json();
     setLoading(false);

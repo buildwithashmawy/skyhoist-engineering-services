@@ -23,6 +23,13 @@ function makeToken() {
   return randomBytes(32).toString("hex");
 }
 
+function normalizeCustomerStatus(status: string): CustomerStatus {
+  if (status === "pending" || status === "flagged" || status === "verified") {
+    return status;
+  }
+  return "verified";
+}
+
 function publicUser(user: CertUser) {
   return {
     id: user.id,
@@ -182,6 +189,9 @@ export const firebaseStore = {
     status: CustomerStatus;
   }) {
     const db = getDb();
+    const fullName = input.fullName.trim();
+    if (!fullName) throw new Error("Company name is required.");
+    const status = normalizeCustomerStatus(input.status);
     const now = new Date().toISOString();
     if (input.id) {
       const ref = db.collection(collections.customers).doc(input.id);
@@ -189,10 +199,10 @@ export const firebaseStore = {
       if (!snap.exists) throw new Error("Customer not found.");
       const next: Customer = {
         ...(snap.data() as Customer),
-        fullName: input.fullName.trim(),
+        fullName,
         email: (input.email || "").trim(),
         phone: (input.phone || "").trim(),
-        status: input.status,
+        status,
         updatedAt: now,
       };
       await ref.set(next);
@@ -201,10 +211,10 @@ export const firebaseStore = {
 
     const customer: Customer = {
       id: randomUUID(),
-      fullName: input.fullName.trim(),
+      fullName,
       email: (input.email || "").trim(),
       phone: (input.phone || "").trim(),
-      status: input.status,
+      status,
       createdAt: now,
       updatedAt: now,
     };
@@ -289,14 +299,22 @@ export const firebaseStore = {
     createdById: string;
   }) {
     const db = getDb();
+    const customerId = input.customerId.trim();
+    if (!customerId) {
+      throw new Error("Select a customer before creating a certificate.");
+    }
     const customerSnap = await db
       .collection(collections.customers)
-      .doc(input.customerId)
+      .doc(customerId)
       .get();
-    if (!customerSnap.exists) throw new Error("Customer not found.");
+    if (!customerSnap.exists) {
+      throw new Error("Customer not found. Add the company in Customer Ledger first.");
+    }
 
     const certificateNo = input.certificateNo.trim();
     if (!certificateNo) throw new Error("Certificate number is required.");
+    const expireDate = input.expireDate.trim();
+    if (!expireDate) throw new Error("Expire date is required.");
 
     const duplicate = await db
       .collection(collections.certificates)
@@ -317,8 +335,8 @@ export const firebaseStore = {
       const next: Certificate = {
         ...prev,
         certificateNo,
-        customerId: input.customerId,
-        expireDate: input.expireDate,
+        customerId,
+        expireDate,
         status: input.status,
         notes: (input.notes || "").trim(),
         verificationToken: input.verificationToken?.trim() || prev.verificationToken,
@@ -346,8 +364,8 @@ export const firebaseStore = {
     const cert: Certificate = {
       id: randomUUID(),
       certificateNo,
-      customerId: input.customerId,
-      expireDate: input.expireDate,
+      customerId,
+      expireDate,
       status: input.status,
       verificationToken: input.verificationToken?.trim() || makeToken(),
       notes: (input.notes || "").trim(),

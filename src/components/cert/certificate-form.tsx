@@ -28,6 +28,7 @@ function randomToken() {
 export function CertificateForm({ certificateId }: Props) {
   const router = useRouter();
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [customersLoaded, setCustomersLoaded] = useState(false);
   const [certificateNo, setCertificateNo] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [expireDate, setExpireDate] = useState("");
@@ -49,7 +50,14 @@ export function CertificateForm({ certificateId }: Props) {
     async function bootstrap() {
       const customersRes = await fetch("/api/cert/customers/");
       const customersData = await customersRes.json();
-      if (customersRes.ok) setCustomers(customersData.customers);
+      if (customersRes.ok) {
+        setCustomers(
+          (customersData.customers as Customer[]).filter((c) =>
+            Boolean(c.fullName?.trim()),
+          ),
+        );
+      }
+      setCustomersLoaded(true);
 
       if (!certificateId) {
         setVerificationToken(randomToken());
@@ -123,15 +131,37 @@ export function CertificateForm({ certificateId }: Props) {
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (!certificateNo.trim()) {
+      setError("Certificate number is required.");
+      return;
+    }
+    if (!customerId) {
+      setError(
+        customers.length === 0
+          ? "Add a company in Customer Ledger before creating a certificate."
+          : "Select a customer entity for this certificate.",
+      );
+      return;
+    }
+    if (!expireDate) {
+      setError("Expire date is required.");
+      return;
+    }
+    if (!verificationToken.trim()) {
+      setError("Verification token is required.");
+      return;
+    }
+
+    setLoading(true);
     const payload = {
-      certificateNo,
+      certificateNo: certificateNo.trim(),
       customerId,
       expireDate,
       status,
       notes,
-      verificationToken,
+      verificationToken: verificationToken.trim(),
       pages: pages.filter(Boolean),
     };
     const res = await fetch(
@@ -157,9 +187,9 @@ export function CertificateForm({ certificateId }: Props) {
   return (
     <>
       <PageHeader
-        eyebrow="DOCUMENT REPOSITORY"
+        eyebrow="ORGANIZATION REGISTRY"
         title={certificateId ? "Edit Certificate" : "New Institutional Certificate"}
-        description="Certificate metadata plus optional document pages (1–5) for verification."
+        description="Certificates are shared across the whole organization — every admin and inspector sees the same archive."
         breadcrumb={[
           { label: "Archive", href: "/certificate/admin/certificates/" },
           { label: "Certificates", href: "/certificate/admin/certificates/" },
@@ -176,6 +206,18 @@ export function CertificateForm({ certificateId }: Props) {
                   {error}
                 </div>
               ) : null}
+              {customersLoaded && customers.length === 0 ? (
+                <div className="rounded-xl border border-[var(--brand-orange)]/35 bg-[var(--brand-sky)] px-4 py-3 text-sm text-[var(--brand-ink)]">
+                  No companies are registered yet.{" "}
+                  <Link
+                    href="/certificate/admin/customers/new/"
+                    className="font-semibold underline underline-offset-2"
+                  >
+                    Add a customer
+                  </Link>{" "}
+                  first, then return here to issue the certificate.
+                </div>
+              ) : null}
               <Field label="Certificate No.">
                 <input
                   className={inputClass}
@@ -185,14 +227,22 @@ export function CertificateForm({ certificateId }: Props) {
                   required
                 />
               </Field>
-              <Field label="Customer Entity">
+              <Field
+                label="Customer Entity"
+                hint="Pick from the shared organization customer ledger."
+              >
                 <select
                   className={inputClass}
                   value={customerId}
                   onChange={(e) => setCustomerId(e.target.value)}
                   required
+                  disabled={customers.length === 0}
                 >
-                  <option value="">Select customer</option>
+                  <option value="">
+                    {customers.length === 0
+                      ? "No customers available"
+                      : "Select customer"}
+                  </option>
                   {customers.map((customer) => (
                     <option key={customer.id} value={customer.id}>
                       {customer.fullName}
@@ -312,7 +362,10 @@ export function CertificateForm({ certificateId }: Props) {
               </div>
 
               <div className="flex flex-wrap gap-3 pt-2">
-                <PrimaryButton type="submit" disabled={loading}>
+                <PrimaryButton
+                  type="submit"
+                  disabled={loading || (customersLoaded && customers.length === 0)}
+                >
                   {loading
                     ? "Saving…"
                     : certificateId
@@ -330,10 +383,11 @@ export function CertificateForm({ certificateId }: Props) {
         <ComplianceCard
           title="Quick Guidelines"
           items={[
-            "Link every certificate to a customer already in the ledger.",
+            "This is an organization-level registry — certificates are shared by all users, not private to one inspector.",
+            "Create the company in Customer Ledger first, then link the certificate.",
+            "Company name is required; blank names are rejected and cannot be selected here.",
             "Keep the verification token unique — it powers the public QR page.",
             "Upload up to five document pages (PDF or image) for field verification.",
-            "Use Replace or Delete on a page file — then Save Changes to update the QR verification pages.",
             "Use Valid only when the certificate is ready for public checks.",
           ]}
         />

@@ -22,6 +22,13 @@ const DATA_DIR =
 const STORE_PATH = path.join(DATA_DIR, "certificate-store.json");
 const UPLOAD_DIR = path.join(DATA_DIR, "uploads");
 
+function normalizeCustomerStatus(status: string): CustomerStatus {
+  if (status === "pending" || status === "flagged" || status === "verified") {
+    return status;
+  }
+  return "verified";
+}
+
 async function ensureDirs() {
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
@@ -169,16 +176,19 @@ export const localStore = {
     status: CustomerStatus;
   }) {
     const store = await readStore();
+    const fullName = input.fullName.trim();
+    if (!fullName) throw new Error("Company name is required.");
+    const status = normalizeCustomerStatus(input.status);
     const now = new Date().toISOString();
     if (input.id) {
       const idx = store.customers.findIndex((c) => c.id === input.id);
       if (idx < 0) throw new Error("Customer not found.");
       store.customers[idx] = {
         ...store.customers[idx],
-        fullName: input.fullName.trim(),
+        fullName,
         email: (input.email || "").trim(),
         phone: (input.phone || "").trim(),
-        status: input.status,
+        status,
         updatedAt: now,
       };
       await writeStore(store);
@@ -186,10 +196,10 @@ export const localStore = {
     }
     const customer: Customer = {
       id: randomUUID(),
-      fullName: input.fullName.trim(),
+      fullName,
       email: (input.email || "").trim(),
       phone: (input.phone || "").trim(),
-      status: input.status,
+      status,
       createdAt: now,
       updatedAt: now,
     };
@@ -246,12 +256,16 @@ export const localStore = {
     createdById: string;
   }) {
     const store = await readStore();
-    if (!store.customers.some((c) => c.id === input.customerId)) {
-      throw new Error("Customer not found.");
+    const customerId = input.customerId.trim();
+    if (!customerId) throw new Error("Select a customer before creating a certificate.");
+    if (!store.customers.some((c) => c.id === customerId)) {
+      throw new Error("Customer not found. Add the company in Customer Ledger first.");
     }
     const now = new Date().toISOString();
     const certificateNo = input.certificateNo.trim();
     if (!certificateNo) throw new Error("Certificate number is required.");
+    const expireDate = input.expireDate.trim();
+    if (!expireDate) throw new Error("Expire date is required.");
     const duplicate = store.certificates.find(
       (c) =>
         c.certificateNo.toLowerCase() === certificateNo.toLowerCase() &&
@@ -267,8 +281,8 @@ export const localStore = {
       store.certificates[idx] = {
         ...prev,
         certificateNo,
-        customerId: input.customerId,
-        expireDate: input.expireDate,
+        customerId,
+        expireDate,
         status: input.status,
         notes: (input.notes || "").trim(),
         verificationToken: input.verificationToken?.trim() || prev.verificationToken,
@@ -296,8 +310,8 @@ export const localStore = {
     const cert: Certificate = {
       id: randomUUID(),
       certificateNo,
-      customerId: input.customerId,
-      expireDate: input.expireDate,
+      customerId,
+      expireDate,
       status: input.status,
       verificationToken: input.verificationToken?.trim() || makeToken(),
       notes: (input.notes || "").trim(),

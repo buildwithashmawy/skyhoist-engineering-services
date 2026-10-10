@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Mail, MapPin, Phone, Clock3 } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
-import { FadeUp } from "@/components/motion";
+import { FadeUp, ParallaxMedia } from "@/components/motion";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,14 +18,16 @@ export default function ContactPage() {
   return (
     <>
       <section className="relative min-h-[48vh] overflow-hidden pt-24">
-        <Image
-          src="/images/offshore-sunset.jpg"
-          alt="Dropped-object and site safety inspection"
-          fill
-          priority
-          className="object-cover hero-media"
-          sizes="100vw"
-        />
+        <ParallaxMedia className="absolute inset-0 scale-110">
+          <Image
+            src="/images/offshore-sunset.jpg"
+            alt="Dropped-object and site safety inspection"
+            fill
+            priority
+            className="object-cover hero-media"
+            sizes="100vw"
+          />
+        </ParallaxMedia>
         <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(15,28,92,0.88),rgba(15,28,92,0.4))]" />
         <div className="grain absolute inset-0" />
         <div className="relative mx-auto flex min-h-[48vh] max-w-7xl items-end px-5 pb-14 md:px-8">

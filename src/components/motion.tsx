@@ -1,59 +1,82 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  motion,
-  useInView,
-  useReducedMotion,
-  type HTMLMotionProps,
-} from "framer-motion";
-import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, useGSAP);
+}
 
-function useMotionReady() {
-  const [ready, setReady] = useState(false);
+function usePrefersReducedMotion() {
+  const [reduce, setReduce] = useState(false);
   useEffect(() => {
-    const id = requestAnimationFrame(() => setReady(true));
-    return () => cancelAnimationFrame(id);
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduce(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
   }, []);
-  return ready;
+  return reduce;
+}
+
+function useRevealSafety(active: boolean) {
+  const [safe, setSafe] = useState(false);
+  useEffect(() => {
+    if (active) {
+      setSafe(true);
+      return;
+    }
+    const t = window.setTimeout(() => setSafe(true), 1800);
+    return () => window.clearTimeout(t);
+  }, [active]);
+  return safe;
 }
 
 export function FadeUp({
   children,
   className,
   delay = 0,
-  ...props
-}: HTMLMotionProps<"div"> & { delay?: number }) {
-  const reduce = useReducedMotion();
-  const ready = useMotionReady();
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.18, margin: "0px 0px -6% 0px" });
-  const [safe, setSafe] = useState(false);
+  const reduce = usePrefersReducedMotion();
+  const safe = useRevealSafety(reduce);
 
-  useEffect(() => {
-    const t = window.setTimeout(() => setSafe(true), 1800);
-    return () => window.clearTimeout(t);
-  }, []);
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el || reduce) return;
 
-  const show = !ready || reduce || inView || safe;
+      gsap.set(el, { opacity: 0, y: 32 });
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.85,
+        delay,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 88%",
+          once: true,
+        },
+      });
+    },
+    { dependencies: [delay, reduce], revertOnUpdate: true },
+  );
 
   return (
-    <motion.div
+    <div
       ref={ref}
       className={className}
-      initial={false}
-      animate={
-        show
-          ? { opacity: 1, y: 0 }
-          : { opacity: 0, y: 28 }
-      }
-      transition={{ duration: 0.75, delay: show && ready && !reduce ? delay : 0, ease }}
-      {...props}
+      style={safe || reduce ? undefined : { opacity: 0 }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -62,41 +85,42 @@ export function Stagger({
   className,
   delay = 0,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   delay?: number;
 }) {
-  const reduce = useReducedMotion();
-  const ready = useMotionReady();
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.12 });
-  const [safe, setSafe] = useState(false);
+  const reduce = usePrefersReducedMotion();
 
-  useEffect(() => {
-    const t = window.setTimeout(() => setSafe(true), 1800);
-    return () => window.clearTimeout(t);
-  }, []);
+  useGSAP(
+    () => {
+      const root = ref.current;
+      if (!root || reduce) return;
+      const items = gsap.utils.toArray<HTMLElement>(".gsap-stagger-item", root);
+      if (!items.length) return;
 
-  const show = !ready || reduce || inView || safe;
+      gsap.set(items, { opacity: 0, y: 30 });
+      gsap.to(items, {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        delay,
+        stagger: 0.1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: root,
+          start: "top 88%",
+          once: true,
+        },
+      });
+    },
+    { scope: ref, dependencies: [delay, reduce], revertOnUpdate: true },
+  );
 
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={false}
-      animate={show ? "show" : "hidden"}
-      variants={{
-        hidden: {},
-        show: {
-          transition: {
-            staggerChildren: reduce || !ready ? 0 : 0.1,
-            delayChildren: reduce || !ready ? 0 : delay,
-          },
-        },
-      }}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -104,29 +128,19 @@ export function StaggerItem({
   children,
   className,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
-  const ready = useMotionReady();
+  const reduce = usePrefersReducedMotion();
+  const safe = useRevealSafety(reduce);
 
   return (
-    <motion.div
-      className={className}
-      variants={{
-        hidden:
-          reduce || !ready
-            ? { opacity: 1, y: 0 }
-            : { opacity: 0, y: 28 },
-        show: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.7, ease },
-        },
-      }}
+    <div
+      className={`gsap-stagger-item${className ? ` ${className}` : ""}`}
+      style={safe || reduce ? undefined : { opacity: 0 }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -135,26 +149,36 @@ export function HeroEnter({
   className,
   delay = 0,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   delay?: number;
 }) {
-  const reduce = useReducedMotion();
-  const ready = useMotionReady();
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = usePrefersReducedMotion();
+
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el || reduce) return;
+      gsap.fromTo(
+        el,
+        { opacity: 0, y: 28 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          delay,
+          ease: "power3.out",
+        },
+      );
+    },
+    { dependencies: [delay, reduce], revertOnUpdate: true },
+  );
 
   return (
-    <motion.div
-      className={className}
-      initial={ready && !reduce ? { opacity: 0, y: 24 } : false}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: reduce || !ready ? 0 : 0.85,
-        delay: reduce || !ready ? 0 : delay,
-        ease,
-      }}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -168,33 +192,78 @@ export function CountUp({
   className?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const reduce = usePrefersReducedMotion();
   const [n, setN] = useState(0);
-  const reduce = useReducedMotion();
 
-  useEffect(() => {
-    if (!inView) return;
-    if (reduce) {
-      setN(value);
-      return;
-    }
-    let frame = 0;
-    const start = performance.now();
-    const duration = 1400;
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setN(Math.round(value * eased));
-      if (t < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [value, reduce, inView]);
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el) return;
+      if (reduce) {
+        setN(value);
+        return;
+      }
+
+      const state = { n: 0 };
+      const tween = gsap.to(state, {
+        n: value,
+        duration: 1.4,
+        ease: "power2.out",
+        onUpdate: () => setN(Math.round(state.n)),
+        scrollTrigger: {
+          trigger: el,
+          start: "top 85%",
+          once: true,
+        },
+      });
+
+      return () => {
+        tween.kill();
+      };
+    },
+    { dependencies: [value, reduce], revertOnUpdate: true },
+  );
 
   return (
     <span ref={ref} className={className}>
       {n}
       {suffix}
     </span>
+  );
+}
+
+/** Subtle parallax scale/shift for hero media layers. */
+export function ParallaxMedia({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = usePrefersReducedMotion();
+
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el || reduce) return;
+      gsap.to(el, {
+        yPercent: 12,
+        ease: "none",
+        scrollTrigger: {
+          trigger: el.parentElement || el,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    },
+    { dependencies: [reduce], revertOnUpdate: true },
+  );
+
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
   );
 }

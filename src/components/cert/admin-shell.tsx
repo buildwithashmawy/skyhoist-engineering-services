@@ -82,7 +82,10 @@ export function AdminShell({
             priority
           />
           <p className="mt-3 text-[0.65rem] font-bold uppercase tracking-[0.22em] text-[#ffb087]">
-            Certificate Registry
+            Organization Certificate Registry
+          </p>
+          <p className="mt-2 text-[0.7rem] leading-relaxed text-white/65">
+            Shared archive for every admin and inspector — not personal per user.
           </p>
         </div>
 

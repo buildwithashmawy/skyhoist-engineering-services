@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
-import { FadeUp } from "@/components/motion";
+import { FadeUp, HeroEnter, ParallaxMedia } from "@/components/motion";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -35,30 +35,38 @@ export default async function ServiceDetailPage({ params }: Props) {
   return (
     <>
       <section className="relative min-h-[58vh] overflow-hidden pt-24">
-        <Image
-          src={service.image}
-          alt={service.title}
-          fill
-          priority
-          className="object-cover hero-media"
-          sizes="100vw"
-        />
+        <ParallaxMedia className="absolute inset-0 scale-110">
+          <Image
+            src={service.image}
+            alt={
+              service.slug === "inspection-services"
+                ? "Technician inspecting an elevator for safety compliance"
+                : service.title
+            }
+            fill
+            priority
+            className="object-cover hero-media"
+            sizes="100vw"
+          />
+        </ParallaxMedia>
         <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(15,28,92,0.9),rgba(15,28,92,0.4))]" />
         <div className="grain absolute inset-0" />
         <div className="relative mx-auto flex min-h-[58vh] max-w-7xl flex-col justify-end px-5 pb-14 md:px-8">
-          <Link
-            href="/services"
-            className="mb-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-white/80 transition hover:text-white"
-          >
-            <ArrowLeft className="size-4" />
-            All services
-          </Link>
-          <h1 className="max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
-            {service.title}
-          </h1>
-          <p className="mt-4 max-w-2xl text-lg text-white/78">
-            {service.summary}
-          </p>
+          <HeroEnter>
+            <Link
+              href="/services"
+              className="mb-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-white/80 transition hover:text-white"
+            >
+              <ArrowLeft className="size-4" />
+              All services
+            </Link>
+            <h1 className="max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
+              {service.title}
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-white/78">
+              {service.summary}
+            </p>
+          </HeroEnter>
         </div>
       </section>
 
