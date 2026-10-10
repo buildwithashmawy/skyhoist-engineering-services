@@ -3,7 +3,10 @@ import Image from "next/image";
 import { Mail, MapPin, Phone, Clock3 } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 import { FadeUp } from "@/components/motion";
-import { site } from "@/lib/site";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { getWhatsAppUrl, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -75,6 +78,24 @@ export default function ContactPage() {
                 </div>
               </div>
               <div className="flex gap-3">
+                <WhatsAppIcon className="mt-1 size-5 text-[#25D366]" />
+                <div>
+                  <a
+                    href={getWhatsAppUrl(
+                      `Hello Skyhoist — I'd like to discuss a service inquiry.`,
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block font-semibold transition hover:text-[var(--brand-blue-deep)]"
+                  >
+                    WhatsApp {site.whatsapp}
+                  </a>
+                  <p className="mt-1 text-sm text-[var(--brand-steel)]">
+                    Fastest way to reach the team during working hours.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-3">
                 <Mail className="mt-1 size-5 text-[var(--brand-orange)]" />
                 <a
                   href={`mailto:${site.email}`}
@@ -92,6 +113,20 @@ export default function ContactPage() {
                   </p>
                 </div>
               </div>
+              <a
+                href={getWhatsAppUrl(
+                  `Hello Skyhoist — I'd like to discuss a service inquiry.`,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "btn-lift h-12 w-full bg-[#25D366] text-white hover:bg-[#1ebe57] sm:w-auto",
+                )}
+              >
+                <WhatsAppIcon className="size-4" />
+                Chat on WhatsApp
+              </a>
             </div>
           </div>
         </FadeUp>
@@ -103,7 +138,7 @@ export default function ContactPage() {
             </h2>
             <p className="mt-2 text-sm text-[var(--brand-steel)]">
               We typically respond within one business day. For urgent requests,
-              calling directly is usually fastest.
+              WhatsApp is usually fastest.
             </p>
             <div className="mt-6">
               <ContactForm />

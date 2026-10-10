@@ -5,9 +5,10 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Mail, Phone } from "lucide-react";
 import { SiteLogo } from "@/components/site-logo";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { nav, site } from "@/lib/site";
+import { getWhatsAppUrl, nav, site } from "@/lib/site";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -258,6 +259,19 @@ export function SiteHeader() {
                   <ArrowUpRight className="size-4" />
                 </Link>
                 <div className="space-y-2.5 text-sm text-white/70">
+                  <a
+                    href={getWhatsAppUrl(
+                      `Hello Skyhoist — I'd like to discuss a service inquiry.`,
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2.5 transition hover:text-white"
+                  >
+                    <span className="inline-flex size-8 items-center justify-center rounded-full bg-[#25D366]/20">
+                      <WhatsAppIcon className="size-3.5 text-[#25D366]" />
+                    </span>
+                    WhatsApp {site.whatsapp}
+                  </a>
                   <a
                     href={`tel:${site.phones[0]}`}
                     className="flex items-center gap-2.5 transition hover:text-white"

@@ -15,6 +15,8 @@ export const site = {
   email: "Info@skyhoistservices.com",
   website: "skyhoistservices.com",
   phones: ["+201275109220", "+201042851184"],
+  /** Primary WhatsApp / chat number (same as first phone). */
+  whatsapp: "+201275109220",
   address: {
     line1: "Office 201, Building 38, Al-Multaqa Al-Arabi",
     line2: "Sheraton Airport, Cairo, Egypt",
@@ -289,4 +291,12 @@ export const nav = [
 
 export function getService(slug: string) {
   return services.find((service) => service.slug === slug);
+}
+
+/** WhatsApp click-to-chat URL for the primary number. */
+export function getWhatsAppUrl(message?: string) {
+  const digits = site.whatsapp.replace(/\D/g, "");
+  const url = new URL(`https://wa.me/${digits}`);
+  if (message) url.searchParams.set("text", message);
+  return url.toString();
 }

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { SiteLogo } from "@/components/site-logo";
-import { nav, site } from "@/lib/site";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
+import { getWhatsAppUrl, nav, site } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -59,6 +60,19 @@ export function SiteFooter() {
                   </a>
                 ))}
               </span>
+            </li>
+            <li className="flex gap-3">
+              <WhatsAppIcon className="mt-0.5 size-4 shrink-0 text-[#25D366]" />
+              <a
+                href={getWhatsAppUrl(
+                  `Hello Skyhoist — I'd like to discuss a service inquiry.`,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-white"
+              >
+                WhatsApp {site.whatsapp}
+              </a>
             </li>
             <li className="flex gap-3">
               <Mail className="mt-0.5 size-4 shrink-0 text-[var(--brand-orange)]" />

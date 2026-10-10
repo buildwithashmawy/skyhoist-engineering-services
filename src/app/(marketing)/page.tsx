@@ -8,9 +8,10 @@ import {
   Stagger,
   StaggerItem,
 } from "@/components/motion";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { services, site, values } from "@/lib/site";
+import { getWhatsAppUrl, services, site, values } from "@/lib/site";
 
 const featured = services.slice(0, 6);
 
@@ -332,24 +333,29 @@ export default function HomePage() {
                 training, and technical support.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/contact"
+                <a
+                  href={getWhatsAppUrl(
+                    `Hello Skyhoist — I'd like to discuss a service inquiry.`,
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={cn(
                     buttonVariants({ size: "lg" }),
-                    "btn-lift orange-glow h-12 bg-[var(--brand-orange)] px-6 text-white hover:bg-[var(--brand-orange-dark)]",
+                    "btn-lift h-12 bg-[#25D366] px-6 text-white hover:bg-[#1ebe57]",
                   )}
                 >
-                  Get in touch
-                </Link>
-                <a
-                  href={`tel:${site.phones[0]}`}
+                  <WhatsAppIcon className="size-4" />
+                  WhatsApp us
+                </a>
+                <Link
+                  href="/contact"
                   className={cn(
                     buttonVariants({ size: "lg", variant: "outline" }),
                     "btn-lift h-12 border-white/35 bg-transparent px-6 text-white hover:bg-white/10 hover:text-white",
                   )}
                 >
-                  Call {site.phones[0]}
-                </a>
+                  Get in touch
+                </Link>
               </div>
             </div>
           </div>

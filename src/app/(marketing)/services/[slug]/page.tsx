@@ -4,9 +4,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { FadeUp } from "@/components/motion";
+import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getService, services } from "@/lib/site";
+import { getService, getWhatsAppUrl, services } from "@/lib/site";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -87,15 +88,31 @@ export default async function ServiceDetailPage({ params }: Props) {
               Tell us about your site requirements and we will help shape a
               clear technical response.
             </p>
-            <Link
-              href="/contact"
-              className={cn(
-                buttonVariants(),
-                "mt-6 orange-glow bg-[var(--brand-orange)] text-white hover:bg-[var(--brand-orange-dark)]",
-              )}
-            >
-              Request a proposal
-            </Link>
+            <div className="mt-6 flex flex-col gap-3">
+              <a
+                href={getWhatsAppUrl(
+                  `Hello Skyhoist — I'm interested in ${service.title}.`,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(
+                  buttonVariants(),
+                  "bg-[#25D366] text-white hover:bg-[#1ebe57]",
+                )}
+              >
+                <WhatsAppIcon className="size-4" />
+                WhatsApp us
+              </a>
+              <Link
+                href="/contact"
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
+                  "border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white",
+                )}
+              >
+                Request a proposal
+              </Link>
+            </div>
           </div>
         </FadeUp>
       </section>
