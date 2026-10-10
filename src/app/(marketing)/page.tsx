@@ -181,7 +181,7 @@ export default function HomePage() {
           </FadeUp>
 
           <Stagger className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3" delay={0.05}>
-            {featured.map((service, index) => (
+            {services.map((service, index) => (
               <StaggerItem key={service.slug}>
                 <Link
                   href={`/services/${service.slug}`}
