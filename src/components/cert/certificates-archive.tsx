@@ -137,7 +137,7 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
         {rows.length === 0 ? (
           <div className="p-8 text-center">
             <p className="font-display text-xl font-bold">No certificates yet</p>
-            <p className="mt-2 text-sm text-[#5c503c]">
+            <p className="mt-2 text-sm text-[var(--brand-steel)]">
               Issue your first institutional certificate to get started.
             </p>
             <Link href="/certificate/admin/certificates/new/" className="mt-5 inline-block">
@@ -147,7 +147,7 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
-              <thead className="border-b border-[#d7c8ad] bg-[#f6f1e7] text-xs uppercase tracking-[0.14em] text-[#8a7c61]">
+              <thead className="border-b border-[var(--border)] bg-[var(--brand-sky)] text-xs uppercase tracking-[0.14em] text-[var(--brand-steel)]">
                 <tr>
                   <th className="px-5 py-4">Certificate No.</th>
                   <th className="px-5 py-4">Expire Date</th>
@@ -158,9 +158,9 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
               </thead>
               <tbody>
                 {rows.map((row) => (
-                  <tr key={row.id} className="border-b border-[#efe6d4]">
+                  <tr key={row.id} className="border-b border-[var(--border)]">
                     <td className="px-5 py-4 font-semibold">{row.certificateNo}</td>
-                    <td className="px-5 py-4 text-[#5c503c]">
+                    <td className="px-5 py-4 text-[var(--brand-steel)]">
                       {row.expireDate
                         ? new Date(row.expireDate).toLocaleDateString("en-US", {
                             month: "short",
@@ -222,13 +222,13 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
             <StatusPill status={selected.status} />
             <dl className="space-y-4">
               <div>
-                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                   Customer
                 </dt>
                 <dd className="mt-1 font-semibold">{selected.customerName}</dd>
               </div>
               <div>
-                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                   Added Time
                 </dt>
                 <dd className="mt-1">
@@ -238,7 +238,7 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
                 </dd>
               </div>
               <div>
-                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                   Expire Date
                 </dt>
                 <dd className="mt-1">
@@ -253,7 +253,7 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
               </div>
             </dl>
 
-            <div className="rounded-2xl border border-[#d7c8ad] bg-[#f6f1e7] p-4 text-center">
+            <div className="rounded-2xl border border-[var(--border)] bg-[var(--brand-sky)] p-4 text-center">
               {qrDataUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -262,9 +262,9 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
                   className="mx-auto rounded-xl bg-white p-2"
                 />
               ) : (
-                <p className="text-xs text-[#8a7c61]">Generating QR…</p>
+                <p className="text-xs text-[var(--brand-steel)]">Generating QR…</p>
               )}
-              <p className="mt-3 break-all font-mono text-[0.7rem] text-[#5c503c]">
+              <p className="mt-3 break-all font-mono text-[0.7rem] text-[var(--brand-steel)]">
                 {selected.verificationToken}
               </p>
             </div>
@@ -290,14 +290,14 @@ export function CertificatesArchive({ rows }: { rows: CertificateRow[] }) {
 
             {selected.pages && selected.pages.length > 0 ? (
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                   Document Pages
                 </p>
                 <ul className="mt-2 space-y-2">
                   {selected.pages.map((page) => (
                     <li key={page.storedName}>
                       <a
-                        className="font-semibold text-[#171310] underline"
+                        className="font-semibold text-[var(--brand-ink)] underline"
                         href={`/api/cert/files/${page.storedName}/`}
                         target="_blank"
                         rel="noreferrer"

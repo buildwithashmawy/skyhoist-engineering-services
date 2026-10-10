@@ -51,33 +51,33 @@ export default function SettingsPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           <Panel accent>
             <PanelBody>
-              <h2 className="font-display text-xl font-bold text-[#171310]">
+              <h2 className="font-display text-xl font-bold text-[var(--brand-ink)]">
                 Current Admin
               </h2>
               <dl className="mt-5 space-y-4 text-sm">
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                     Name
                   </dt>
                   <dd className="mt-1 font-semibold">{currentUser?.fullName || "…"}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                     Admin Username
                   </dt>
                   <dd className="mt-1">{currentUser?.username || "…"}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                     Admin Email
                   </dt>
                   <dd className="mt-1">{currentUser?.email || "…"}</dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                     Role
                   </dt>
-                  <dd className="mt-1 font-bold uppercase tracking-[0.14em] text-[#c9a24a]">
+                  <dd className="mt-1 font-bold uppercase tracking-[0.14em] text-[var(--brand-orange)]">
                     {currentUser?.role === "admin" ? "SUPER_ADMIN" : "INSPECTOR"}
                   </dd>
                 </div>
@@ -94,23 +94,23 @@ export default function SettingsPage() {
 
           <Panel>
             <PanelBody>
-              <h2 className="font-display text-xl font-bold text-[#171310]">
+              <h2 className="font-display text-xl font-bold text-[var(--brand-ink)]">
                 Registry Paths
               </h2>
               <dl className="mt-5 space-y-4 text-sm">
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                     Verification Base URL
                   </dt>
                   <dd className="mt-1 break-all font-mono text-xs">
                     {verificationBaseUrl || "…"}
                   </dd>
-                  <p className="mt-1 text-xs text-[#8a7c61]">
+                  <p className="mt-1 text-xs text-[var(--brand-steel)]">
                     This is the public path QR codes should open after scanning.
                   </p>
                 </div>
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                     Upload Directory
                   </dt>
                   <dd className="mt-1 font-mono text-xs">
@@ -118,7 +118,7 @@ export default function SettingsPage() {
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                  <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                     Database Host
                   </dt>
                   <dd className="mt-1 font-mono text-xs">local file store</dd>

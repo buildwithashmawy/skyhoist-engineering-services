@@ -156,14 +156,14 @@ export function InspectorsPanel({ inspectors }: { inspectors: Inspector[] }) {
             {inspectors.length === 0 ? (
               <div className="p-8 text-center">
                 <p className="font-display text-xl font-bold">No inspectors yet</p>
-                <p className="mt-2 text-sm text-[#5c503c]">
+                <p className="mt-2 text-sm text-[var(--brand-steel)]">
                   Add the first inspector from the form.
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full text-left text-sm">
-                  <thead className="border-b border-[#d7c8ad] bg-[#f6f1e7] text-xs uppercase tracking-[0.14em] text-[#8a7c61]">
+                  <thead className="border-b border-[var(--border)] bg-[var(--brand-sky)] text-xs uppercase tracking-[0.14em] text-[var(--brand-steel)]">
                     <tr>
                       <th className="px-5 py-4">Name</th>
                       <th className="px-5 py-4">Username</th>
@@ -173,7 +173,7 @@ export function InspectorsPanel({ inspectors }: { inspectors: Inspector[] }) {
                   </thead>
                   <tbody>
                     {inspectors.map((inspector) => (
-                      <tr key={inspector.id} className="border-b border-[#efe6d4]">
+                      <tr key={inspector.id} className="border-b border-[var(--border)]">
                         <td className="px-5 py-4">
                           <div className="flex items-center gap-3">
                             <Monogram name={inspector.fullName} />
@@ -181,7 +181,7 @@ export function InspectorsPanel({ inspectors }: { inspectors: Inspector[] }) {
                           </div>
                         </td>
                         <td className="px-5 py-4">{inspector.username}</td>
-                        <td className="px-5 py-4 text-[#5c503c]">{inspector.email}</td>
+                        <td className="px-5 py-4 text-[var(--brand-steel)]">{inspector.email}</td>
                         <td className="px-5 py-4">
                           <SecondaryButton
                             type="button"

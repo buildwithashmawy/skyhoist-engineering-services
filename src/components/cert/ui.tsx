@@ -18,31 +18,38 @@ export function PageHeader({
     <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
       <div>
         {breadcrumb?.length ? (
-          <nav className="mb-3 flex flex-wrap items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a7c61]">
+          <nav className="mb-3 flex flex-wrap items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-steel)]">
             {breadcrumb.map((item, index) => (
               <span key={`${item.label}-${index}`} className="inline-flex items-center gap-1.5">
-                {index > 0 ? <span className="text-[#c9a24a]">›</span> : null}
+                {index > 0 ? (
+                  <span className="text-[var(--brand-orange)]">›</span>
+                ) : null}
                 {item.href ? (
-                  <Link href={item.href} className="transition hover:text-[#171310]">
+                  <Link
+                    href={item.href}
+                    className="transition hover:text-[var(--brand-ink)]"
+                  >
                     {item.label}
                   </Link>
                 ) : (
-                  <span className="text-[#c9a24a]">{item.label}</span>
+                  <span className="text-[var(--brand-orange)]">{item.label}</span>
                 )}
               </span>
             ))}
           </nav>
         ) : null}
         {eyebrow ? (
-          <p className="text-xs font-bold tracking-[0.22em] text-[#c9a24a]">
+          <p className="text-xs font-bold tracking-[0.22em] text-[var(--brand-orange)]">
             {eyebrow}
           </p>
         ) : null}
-        <h1 className="mt-2 font-display text-3xl font-bold tracking-wide text-[#171310] md:text-4xl">
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-wide text-[var(--brand-ink)] md:text-4xl">
           {title}
         </h1>
         {description ? (
-          <p className="mt-2 max-w-2xl text-sm text-[#5c503c]">{description}</p>
+          <p className="mt-2 max-w-2xl text-sm text-[var(--brand-steel)]">
+            {description}
+          </p>
         ) : null}
       </div>
       {actions ? <div className="flex flex-wrap gap-3">{actions}</div> : null}
@@ -62,8 +69,8 @@ export function Panel({
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-[1.4rem] border border-[#d7c8ad] bg-[#fffdf8] shadow-[0_18px_40px_rgba(23,19,16,0.06)]",
-        accent && "border-t-[3px] border-t-[#c9a24a]",
+        "overflow-hidden rounded-[1.4rem] border border-[var(--border)] bg-white shadow-[0_18px_40px_rgba(15,28,92,0.06)]",
+        accent && "border-t-[3px] border-t-[var(--brand-orange)]",
         className,
       )}
     >
@@ -93,25 +100,27 @@ export function Field({
 }) {
   return (
     <label className="block space-y-2">
-      <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#5c503c]">
+      <span className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
         {label}
       </span>
       {children}
-      {hint ? <span className="block text-xs text-[#8a7c61]">{hint}</span> : null}
+      {hint ? (
+        <span className="block text-xs text-[var(--brand-steel)]">{hint}</span>
+      ) : null}
     </label>
   );
 }
 
 export const inputClass =
-  "w-full rounded-xl border border-[#d7c8ad] bg-[#f6f1e7] px-4 py-3 text-sm text-[#171310] outline-none transition placeholder:text-[#8a7c61] focus:border-[#c9a24a] focus:bg-[#fffdf8]";
+  "w-full rounded-xl border border-[var(--border)] bg-[var(--brand-sky)] px-4 py-3 text-sm text-[var(--brand-ink)] outline-none transition placeholder:text-[var(--brand-steel)] focus:border-[var(--brand-blue)] focus:bg-white";
 
 export function StatusPill({ status }: { status: string }) {
   const normalized = status.toLowerCase();
   const tone =
     normalized === "valid" || normalized === "verified"
-      ? "bg-[#ffe7ad] text-[#674500]"
+      ? "bg-[#e8f5fc] text-[#013baa]"
       : normalized === "pending"
-        ? "bg-[#e6dac2] text-[#5c503c]"
+        ? "bg-[#eef3f7] text-[var(--brand-steel)]"
         : normalized === "expired" || normalized === "flagged"
           ? "bg-[#ffdad6] text-[#93000a]"
           : "bg-[#ffdad6] text-[#93000a]";
@@ -153,7 +162,7 @@ export function SecondaryButton({
   return (
     <button
       className={cn(
-        "inline-flex min-h-11 items-center justify-center rounded-xl bg-[#f6f1e7] px-5 text-sm font-bold text-[#171310] transition hover:bg-[#ede4d3] disabled:opacity-60",
+        "inline-flex min-h-11 items-center justify-center rounded-xl bg-[var(--brand-sky)] px-5 text-sm font-bold text-[var(--brand-ink)] transition hover:bg-[#d7ebf7] disabled:opacity-60",
         className,
       )}
       {...props}
@@ -187,17 +196,19 @@ export function StatCard({
   tone?: "default" | "valid" | "pending" | "danger";
 }) {
   const styles = {
-    default: "bg-[#fffdf8] border-[#d7c8ad]",
-    valid: "bg-[#fff7e0] border-[#ffe7ad]",
-    pending: "bg-[#f6f1e7] border-[#e6dac2]",
+    default: "bg-white border-[var(--border)]",
+    valid: "bg-[#e8f5fc] border-[#b7dcf0]",
+    pending: "bg-[#eef3f7] border-[var(--border)]",
     danger: "bg-[#fff1f0] border-[#ffdad6]",
   }[tone];
   return (
     <div className={cn("rounded-2xl border px-5 py-4", styles)}>
-      <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[#8a7c61]">
+      <p className="text-[0.68rem] font-bold uppercase tracking-[0.18em] text-[var(--brand-steel)]">
         {label}
       </p>
-      <p className="mt-2 font-display text-3xl font-bold text-[#171310]">{value}</p>
+      <p className="mt-2 font-display text-3xl font-bold text-[var(--brand-ink)]">
+        {value}
+      </p>
     </div>
   );
 }
@@ -230,7 +241,7 @@ export function ComplianceCard({
 
 export function RecordsBadge({ count }: { count: number }) {
   return (
-    <span className="inline-flex items-center rounded-full bg-[#ffe7ad] px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[#674500]">
+    <span className="inline-flex items-center rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-[var(--brand-orange-dark)]">
       {count} record{count === 1 ? "" : "s"}
     </span>
   );

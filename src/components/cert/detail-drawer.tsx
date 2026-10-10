@@ -35,26 +35,26 @@ export function DetailDrawer({
       />
       <aside
         className={cn(
-          "absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-[#fffdf8] shadow-[-24px_0_60px_rgba(23,19,16,0.22)] transition-transform duration-300",
+          "absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-white shadow-[-24px_0_60px_rgba(15,28,92,0.18)] transition-transform duration-300",
           open ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <div className="border-b border-[#d7c8ad] px-6 py-5">
+        <div className="border-b border-[var(--border)] px-6 py-5">
           <div className="flex items-start justify-between gap-3">
             <div>
               {eyebrow ? (
-                <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[#c9a24a]">
+                <p className="text-[0.68rem] font-bold uppercase tracking-[0.2em] text-[var(--brand-orange)]">
                   {eyebrow}
                 </p>
               ) : null}
-              <h2 className="mt-1 font-display text-2xl font-bold tracking-wide text-[#171310]">
+              <h2 className="mt-1 font-display text-2xl font-bold tracking-wide text-[var(--brand-ink)]">
                 {title}
               </h2>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex size-10 items-center justify-center rounded-full bg-[#f6f1e7] text-[#171310] transition hover:bg-[#ede4d3]"
+              className="inline-flex size-10 items-center justify-center rounded-full bg-[var(--brand-sky)] text-[var(--brand-ink)] transition hover:bg-[#d7ebf7]"
               aria-label="Close"
             >
               <X className="size-4" />

@@ -243,8 +243,8 @@ export function CertificateForm({ certificateId }: Props) {
                 />
               </Field>
 
-              <div className="rounded-2xl border border-[#d7c8ad] bg-[#f6f1e7] p-5">
-                <h3 className="font-display text-lg font-bold text-[#171310]">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--brand-sky)] p-5">
+                <h3 className="font-display text-lg font-bold text-[var(--brand-ink)]">
                   Document Repository (Pages 1–5)
                 </h3>
                 <div className="mt-4 grid gap-3">
@@ -253,20 +253,20 @@ export function CertificateForm({ certificateId }: Props) {
                     return (
                       <div
                         key={pageNo}
-                        className="flex flex-col gap-3 rounded-xl border border-dashed border-[#c9a24a]/60 bg-[#fffdf8] p-4 md:flex-row md:items-center md:justify-between"
+                        className="flex flex-col gap-3 rounded-xl border border-dashed border-[var(--brand-orange)]/60 bg-white p-4 md:flex-row md:items-center md:justify-between"
                       >
                         <div>
-                          <p className="text-sm font-bold text-[#171310]">
+                          <p className="text-sm font-bold text-[var(--brand-ink)]">
                             Page {String(pageNo).padStart(2, "0")}
                           </p>
-                          <p className="text-xs text-[#8a7c61]">
+                          <p className="text-xs text-[var(--brand-steel)]">
                             {page
                               ? `${page.fileName} (${Math.round(page.size / 1024)} KB)`
                               : "Drop or upload a PDF / image"}
                           </p>
                           {page ? (
                             <a
-                              className="mt-1 inline-block text-xs font-semibold text-[#171310] underline"
+                              className="mt-1 inline-block text-xs font-semibold text-[var(--brand-ink)] underline"
                               href={`/api/cert/files/${page.storedName}/`}
                               target="_blank"
                               rel="noreferrer"

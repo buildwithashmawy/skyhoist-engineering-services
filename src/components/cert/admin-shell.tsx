@@ -68,7 +68,8 @@ export function AdminShell({
   );
 
   return (
-    <div className="min-h-screen bg-[#f5f1e8] text-[#171310]">
+    <div className="relative min-h-screen bg-[#eef5fb] text-[var(--brand-ink)]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_10%_-10%,rgba(0,124,193,0.14),transparent_55%),radial-gradient(ellipse_60%_40%_at_100%_0%,rgba(224,89,20,0.08),transparent_45%),linear-gradient(180deg,#f7fbfe_0%,#eef5fb_48%,#f4f8fb_100%)]" />
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col bg-[linear-gradient(165deg,#013baa_0%,#007cc1_58%,#04b5ff_100%)] py-8 text-white shadow-[12px_0_40px_rgba(1,59,170,0.28)] md:flex">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(224,89,20,0.28),transparent_46%)]" />
         <div className="relative px-6">
@@ -137,21 +138,21 @@ export function AdminShell({
         </div>
       </aside>
 
-      <div className="md:ml-64">
-        <header className="flex items-center justify-between gap-3 border-b border-[#d7c8ad] bg-[#fffdf8]/90 px-5 py-3 backdrop-blur">
+      <div className="relative md:ml-64">
+        <header className="flex items-center justify-between gap-3 border-b border-[var(--border)] bg-white/90 px-5 py-3 backdrop-blur">
           <div className="md:hidden">
-            <p className="font-display text-sm font-bold tracking-wide">
+            <p className="font-display text-sm font-bold tracking-wide text-[var(--brand-ink)]">
               Certificate Portal
             </p>
           </div>
           <div className="ml-auto">
-            <span className="inline-flex items-center rounded-full border border-[#d7c8ad] bg-[#f6f1e7] px-3 py-1.5 text-xs font-semibold text-[#5c503c]">
+            <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--brand-sky)] px-3 py-1.5 text-xs font-semibold text-[var(--brand-steel)]">
               {user.email}
             </span>
           </div>
         </header>
 
-        <div className="flex gap-2 overflow-x-auto border-b border-[#d7c8ad] bg-[#fffdf8] px-3 py-2 md:hidden">
+        <div className="flex gap-2 overflow-x-auto border-b border-[var(--border)] bg-white/90 px-3 py-2 md:hidden">
           {[
             ...visible,
             {
@@ -167,7 +168,7 @@ export function AdminShell({
                 "whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold",
                 isActive(pathname, item.href)
                   ? "bg-[#013baa] text-white"
-                  : "bg-[#f6f1e7] text-[#171310]",
+                  : "bg-[var(--brand-sky)] text-[var(--brand-ink)]",
               )}
             >
               {item.label}

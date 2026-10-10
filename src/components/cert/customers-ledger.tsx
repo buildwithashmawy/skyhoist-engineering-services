@@ -66,7 +66,7 @@ export function CustomersLedger({ customers }: { customers: Customer[] }) {
         {customers.length === 0 ? (
           <div className="p-8 text-center">
             <p className="font-display text-xl font-bold">No customers yet</p>
-            <p className="mt-2 text-sm text-[#5c503c]">
+            <p className="mt-2 text-sm text-[var(--brand-steel)]">
               Add a company before issuing certificates.
             </p>
             <div className="mt-5 flex flex-wrap justify-center gap-3">
@@ -80,8 +80,8 @@ export function CustomersLedger({ customers }: { customers: Customer[] }) {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between border-b border-[#d7c8ad] px-5 py-4">
-              <p className="text-sm text-[#5c503c]">
+            <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
+              <p className="text-sm text-[var(--brand-steel)]">
                 Active records in the live registry
               </p>
               <Link href="/certificate/admin/certificates/new/">
@@ -92,7 +92,7 @@ export function CustomersLedger({ customers }: { customers: Customer[] }) {
             </div>
             <div className="overflow-x-auto">
               <table className="min-w-full text-left text-sm">
-                <thead className="border-b border-[#d7c8ad] bg-[#f6f1e7] text-xs uppercase tracking-[0.14em] text-[#8a7c61]">
+                <thead className="border-b border-[var(--border)] bg-[var(--brand-sky)] text-xs uppercase tracking-[0.14em] text-[var(--brand-steel)]">
                   <tr>
                     <th className="px-5 py-4">Company Name</th>
                     <th className="px-5 py-4">Email Address</th>
@@ -103,17 +103,17 @@ export function CustomersLedger({ customers }: { customers: Customer[] }) {
                 </thead>
                 <tbody>
                   {customers.map((customer) => (
-                    <tr key={customer.id} className="border-b border-[#efe6d4]">
+                    <tr key={customer.id} className="border-b border-[var(--border)]">
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           <Monogram name={customer.fullName} />
                           <span className="font-semibold">{customer.fullName}</span>
                         </div>
                       </td>
-                      <td className="px-5 py-4 text-[#5c503c]">
+                      <td className="px-5 py-4 text-[var(--brand-steel)]">
                         {customer.email || "—"}
                       </td>
-                      <td className="px-5 py-4 text-[#5c503c]">
+                      <td className="px-5 py-4 text-[var(--brand-steel)]">
                         {customer.phone || "—"}
                       </td>
                       <td className="px-5 py-4">
@@ -173,19 +173,19 @@ export function CustomersLedger({ customers }: { customers: Customer[] }) {
             </div>
             <dl className="space-y-4">
               <div>
-                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                   Email
                 </dt>
                 <dd className="mt-1">{selected.email || "—"}</dd>
               </div>
               <div>
-                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                   Phone
                 </dt>
                 <dd className="mt-1">{selected.phone || "—"}</dd>
               </div>
               <div>
-                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a7c61]">
+                <dt className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
                   Added
                 </dt>
                 <dd className="mt-1">
