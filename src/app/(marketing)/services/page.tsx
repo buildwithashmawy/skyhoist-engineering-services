@@ -8,7 +8,7 @@ import { services } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Inspection, calibration, testing, training, fabrication, PWHT, wellhead maintenance, QHSE, and logistics from Skyhoist Engineering Services.",
+    "Inspection, NDT, lifting, DROPS, rope access, calibration, training, fabrication, PWHT, wellhead, QHSE, and logistics from Skyhoist Engineering Services.",
 };
 
 export default function ServicesPage() {

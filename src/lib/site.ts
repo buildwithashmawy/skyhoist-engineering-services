@@ -41,11 +41,11 @@ export const services: Service[] = [
     summary:
       "Independent inspection programs that help facilities work with confidence.",
     description:
-      "Skyhoist provides rigorous inspection coverage across rigs, tubulars, lifting equipment, NDT scopes, dropped-object surveys, rope access, and facility assets—so teams can verify integrity before risk becomes downtime.",
+      "Skyhoist provides independent inspection and verification programs that help you control quality, meet regulatory requirements, and keep industrial assets safe—with clear reporting for operational decisions.",
     points: [
-      "Rig, tubular, and NDT inspection programs",
-      "Lifting and dropped-object surveys",
-      "Rope-access and facility inspections",
+      "Third-party inspection and verification coverage",
+      "Commissioning and periodic inspection support",
+      "Safety-component testing and technical assistance",
       "Clear reporting built for operational decisions",
     ],
     image: "/images/svc-inspection.jpg",
@@ -153,6 +153,111 @@ export const services: Service[] = [
       "Project-aligned supply planning",
     ],
     image: "/images/svc-supply.jpg",
+  },
+  {
+    slug: "rig-inspection",
+    title: "Rig Inspection",
+    summary:
+      "Condition monitoring and integrity checks for rigs, drill pipe, and tubular equipment.",
+    description:
+      "Skyhoist helps operators and drilling contractors keep rigs safe and reliable—monitoring condition, detecting corrosion and fatigue before failure, and verifying operational integrity against current industry standards.",
+    points: [
+      "Rig, drill-pipe, and tubular condition monitoring",
+      "Detection of corrosion, wall loss, and fatigue cracks",
+      "Operational integrity aligned to current standards",
+      "Reporting built for safe, reliable facility operation",
+    ],
+    image: "/images/svc-rig.jpg",
+  },
+  {
+    slug: "tubular-inspection",
+    title: "Tubular Inspection",
+    summary:
+      "BHA, drill-pipe, tubing, and casing inspection against client-nominated standards.",
+    description:
+      "From bottom-hole assemblies to drill pipe, tubing, and casing, Skyhoist delivers tubular inspection programs using methods matched to drilling conditions—supporting higher performance and fewer unexpected failures.",
+    points: [
+      "BHA inspection to API RP7, DS-1, NS-2, or client standards",
+      "Drill-pipe EMI, magnetic-flow, and surface preparation",
+      "Tubing and casing visual, drift, and thread checks",
+      "Cleaning, coating, hardness, and UT wall-thickness support",
+    ],
+    image: "/images/svc-tubular.jpg",
+  },
+  {
+    slug: "ndt-inspection",
+    title: "NDT Inspection",
+    summary:
+      "Effective non-destructive testing methods for equipment and asset integrity.",
+    description:
+      "Skyhoist applies intrusive and non-intrusive NDT methods to find defects early, screen long pipe runs, and keep facilities operating safely—across fabrication, in-service inspection, and outage windows.",
+    points: [
+      "VT, PT, MT, UT, RT, ET, hardness, and vacuum-box testing",
+      "PMI, remote visual inspection, and infrared thermography",
+      "LRUT, PAUT, TOFD, and digital/computed radiography",
+      "Fast, portable methods suited to plant and field access",
+    ],
+    image: "/images/svc-ndt.jpg",
+  },
+  {
+    slug: "lifting-inspection",
+    title: "Lifting Inspection",
+    summary:
+      "Statutory and voluntary inspection for hoisting, lifting, and material-handling equipment.",
+    description:
+      "Independent lifting inspections help you meet regulatory requirements, confirm safe working condition, and protect uptime—covering personnel and material-handling devices across industrial sites.",
+    points: [
+      "Cranes, derricks, fork-lifts, shackles, hooks, and telehandlers",
+      "Elevating work platforms and related handling devices",
+      "Conformity assessment to applicable standards",
+      "Planned inspections that minimize operational disruption",
+    ],
+    image: "/images/svc-lifting.jpg",
+  },
+  {
+    slug: "dropped-object-inspection",
+    title: "Dropped Object Inspection",
+    summary:
+      "DROPS surveys that identify falling-object hazards offshore and onshore.",
+    description:
+      "Objects falling from height still cause serious incidents. Skyhoist DROPS surveys inventory at-risk items, flag immediate actions with photo evidence, and recommend ongoing maintenance to keep structures safer.",
+    points: [
+      "DROPS surveys from loose-item removal to full inventories",
+      "Photo-backed reports with immediate-action recommendations",
+      "Coverage for derricks, masts, rig equipment, and cranes",
+      "Guidance for continuous dropped-object prevention",
+    ],
+    image: "/images/svc-drops.jpg",
+  },
+  {
+    slug: "rope-access-inspections",
+    title: "Rope Access Inspections",
+    summary:
+      "Safe, cost-effective access for inspection and work at height where scaffolding is impractical.",
+    description:
+      "Skyhoist rope-access teams deliver inspection, NDT, rigging, and fabric-maintenance scopes at height—reducing scaffolding cost and schedule while keeping IRATA-aware safe working practices front and center.",
+    points: [
+      "Alternative to scaffolding and MEWPs for difficult access",
+      "Inspection, NDT, rigging, and fabric maintenance at height",
+      "Oil & gas, petrochemical, and industrial plant coverage",
+      "Time- and cost-efficient access with trained personnel",
+    ],
+    image: "/images/svc-rope.jpg",
+  },
+  {
+    slug: "elevator-escalator-inspection",
+    title: "Elevator & Escalator Inspection",
+    summary:
+      "Commissioning, periodic inspection, and certification for people-elevation systems.",
+    description:
+      "Sensitive passenger systems need independent supervision. Skyhoist supports elevator and escalator safety through document review, hazard analysis, component testing, and periodic inspections that help plan maintenance and reduce downtime.",
+    points: [
+      "Commissioning and periodic safety inspections",
+      "Safety-component testing and conformity reporting",
+      "Condition assessment of aging elevator systems",
+      "Faster electronic testing that shortens asset downtime",
+    ],
+    image: "/images/svc-elevator.jpg",
   },
 ];
 

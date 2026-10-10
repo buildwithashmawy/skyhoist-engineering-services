@@ -16,7 +16,7 @@ const featured = services.slice(0, 6);
 
 const stats = [
   { value: 95, suffix: "%", label: "Certified systems mindset" },
-  { value: 8, suffix: "+", label: "Core service lines" },
+  { value: 15, suffix: "+", label: "Core service lines" },
   { value: 24, suffix: "/7", label: "Operational readiness" },
 ];
 
