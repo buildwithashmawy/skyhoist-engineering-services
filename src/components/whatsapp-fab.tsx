@@ -1,9 +1,29 @@
+"use client";
+
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useRef } from "react";
 import { getWhatsAppUrl, site } from "@/lib/site";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 
 export function WhatsAppFab() {
+  const ref = useRef<HTMLAnchorElement>(null);
+
+  useGSAP(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return;
+    gsap.fromTo(
+      el,
+      { y: 28, opacity: 0, scale: 0.9 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.7, delay: 1.1, ease: "power3.out" },
+    );
+  }, []);
+
   return (
     <a
+      ref={ref}
       href={getWhatsAppUrl(
         `Hello Skyhoist — I'd like to discuss a service inquiry.`,
       )}
@@ -12,8 +32,9 @@ export function WhatsAppFab() {
       aria-label={`Chat on WhatsApp at ${site.whatsapp}`}
       className="group fixed bottom-5 right-5 z-50 inline-flex items-center gap-2.5 rounded-full bg-[#25D366] px-4 py-3.5 text-sm font-bold text-white shadow-[0_12px_32px_rgba(37,211,102,0.45)] transition hover:bg-[#1ebe57] hover:shadow-[0_16px_40px_rgba(37,211,102,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 md:bottom-7 md:right-7"
     >
-      <span className="inline-flex size-9 items-center justify-center rounded-full bg-white/15">
-        <WhatsAppIcon className="size-5" />
+      <span className="relative inline-flex size-9 items-center justify-center rounded-full bg-white/15">
+        <span className="pulse-ring absolute inset-0 rounded-full" />
+        <WhatsAppIcon className="relative size-5" />
       </span>
       <span className="pr-1 max-sm:sr-only">WhatsApp</span>
     </a>

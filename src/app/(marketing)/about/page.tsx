@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { FadeUp, ParallaxMedia, Stagger, StaggerItem } from "@/components/motion";
+import {
+  FadeUp,
+  HeroEnter,
+  ParallaxMedia,
+  RevealWipe,
+  Stagger,
+  StaggerItem,
+} from "@/components/motion";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { site, values } from "@/lib/site";
@@ -26,15 +33,16 @@ export default function AboutPage() {
             sizes="100vw"
           />
         </ParallaxMedia>
-        <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(15,28,92,0.88),rgba(15,28,92,0.4))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(8,16,48,0.9),rgba(15,28,92,0.42))]" />
+        <div className="mesh-glow absolute inset-0" />
         <div className="grain absolute inset-0" />
         <div className="relative mx-auto flex min-h-[58vh] max-w-7xl items-end px-5 pb-14 md:px-8">
-          <FadeUp>
-            <div className="section-rule mb-5 bg-[linear-gradient(90deg,var(--brand-orange),transparent)]" />
+          <HeroEnter>
+            <div className="section-rule mb-5" />
             <p className="text-sm font-bold tracking-[0.24em] text-[var(--brand-orange)]">
               WHO WE ARE
             </p>
-            <h1 className="mt-3 max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
+            <h1 className="page-hero-title mt-3 max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
               Engineering services with industrial discipline
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-white/78">
@@ -42,7 +50,7 @@ export default function AboutPage() {
               safety, and integrity—across inspection, calibration, testing,
               training, and technical delivery.
             </p>
-          </FadeUp>
+          </HeroEnter>
         </div>
       </section>
 
@@ -52,9 +60,11 @@ export default function AboutPage() {
           <p className="text-sm font-bold tracking-[0.24em] text-[var(--brand-orange)]">
             OUR COMMITMENT
           </p>
-          <h2 className="mt-3 font-display text-4xl font-bold tracking-wide text-[var(--brand-ink)]">
-            Quality assurance for demanding industries
-          </h2>
+          <RevealWipe>
+            <h2 className="mt-3 font-display text-4xl font-bold tracking-wide text-[var(--brand-ink)]">
+              Quality assurance for demanding industries
+            </h2>
+          </RevealWipe>
           <p className="mt-5 text-lg leading-relaxed text-[var(--brand-steel)]">
             {site.intro}
           </p>
@@ -65,7 +75,10 @@ export default function AboutPage() {
           </div>
         </FadeUp>
         <FadeUp delay={0.12} className="group">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[1.8rem] shadow-[0_30px_80px_rgba(15,28,92,0.16)]">
+          <div
+            data-cursor="media"
+            className="relative aspect-[4/5] overflow-hidden rounded-[1.8rem] shadow-[0_30px_80px_rgba(15,28,92,0.16)]"
+          >
             <Image
               src="/images/process-towers.jpg"
               alt="Industrial inspection and engineering operations"
@@ -73,6 +86,7 @@ export default function AboutPage() {
               className="object-cover image-lift"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
+            <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
           </div>
         </FadeUp>
       </section>

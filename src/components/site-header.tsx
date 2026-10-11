@@ -168,9 +168,10 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-4 py-2 text-sm font-semibold tracking-wide text-white/85 transition hover:bg-white/10 hover:text-white"
+                className="group relative rounded-full px-4 py-2 text-sm font-semibold tracking-wide text-white/85 transition hover:bg-white/10 hover:text-white"
               >
                 {item.label}
+                <span className="absolute inset-x-4 -bottom-0.5 h-px origin-left scale-x-0 bg-[var(--brand-orange)] transition duration-300 group-hover:scale-x-100" />
               </Link>
             ))}
             <Link

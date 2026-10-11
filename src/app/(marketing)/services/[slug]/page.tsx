@@ -49,18 +49,19 @@ export default async function ServiceDetailPage({ params }: Props) {
             sizes="100vw"
           />
         </ParallaxMedia>
-        <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(15,28,92,0.9),rgba(15,28,92,0.4))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(8,16,48,0.9),rgba(15,28,92,0.42))]" />
+        <div className="mesh-glow absolute inset-0" />
         <div className="grain absolute inset-0" />
         <div className="relative mx-auto flex min-h-[58vh] max-w-7xl flex-col justify-end px-5 pb-14 md:px-8">
           <HeroEnter>
             <Link
               href="/services"
-              className="mb-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-white/80 transition hover:text-white"
+              className="cursor-link mb-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-white/80 transition hover:text-white"
             >
               <ArrowLeft className="size-4" />
               All services
             </Link>
-            <h1 className="max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
+            <h1 className="page-hero-title max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
               {service.title}
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-white/78">

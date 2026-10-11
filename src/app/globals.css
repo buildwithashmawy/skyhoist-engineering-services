@@ -111,6 +111,11 @@
     line-height: 1.5;
   }
 
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+
   h1,
   h2,
   h3,
@@ -246,6 +251,27 @@
     transform: translateX(-120%);
     animation: shimmer-sweep 4.5s ease-in-out infinite;
   }
+
+  .mesh-glow {
+    background:
+      radial-gradient(circle at 20% 80%, rgba(4, 181, 255, 0.12), transparent 28%),
+      radial-gradient(circle at 85% 20%, rgba(224, 89, 20, 0.14), transparent 26%);
+    mix-blend-mode: soft-light;
+  }
+
+  .glass-panel {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(14px) saturate(1.15);
+  }
+
+  .scroll-cue {
+    animation: scroll-cue 1.8s ease-in-out infinite;
+  }
+
+  .page-hero-title {
+    text-wrap: balance;
+  }
 }
 
 @keyframes kenburns {
@@ -302,6 +328,18 @@
   }
 }
 
+@keyframes scroll-cue {
+  0%,
+  100% {
+    transform: scaleX(0.55);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 0.9;
+  }
+}
+
 .float-soft {
   animation: float-soft 5.5s ease-in-out infinite;
 }
@@ -325,6 +363,7 @@
   .drift-soft,
   .pulse-ring::before,
   .shimmer-line::after,
+  .scroll-cue,
   .service-tile,
   .service-tile img,
   .btn-lift,
@@ -333,5 +372,10 @@
     animation: none !important;
     transition: none !important;
     transform: none !important;
+  }
+
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: auto !important;
   }
 }

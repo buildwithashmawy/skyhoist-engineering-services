@@ -6,7 +6,7 @@ Corporate website for **Skyhoist Engineering Services** — a Next.js rebuild of
 
 - Next.js (App Router) + TypeScript
 - Tailwind CSS + shadcn/ui
-- **GSAP** scroll and entrance animations on the marketing site
+- **GSAP** motion system (scroll reveals, magnetic CTAs, parallax) plus a desktop custom cursor
 - **Firebase Firestore + Storage** for the certificate registry (falls back to local JSON when Firebase env vars are unset)
 - Brand assets from the Skyhoist logo pack and industrial photography
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Mail, MapPin, Phone, Clock3 } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
-import { FadeUp, ParallaxMedia } from "@/components/motion";
+import { FadeUp, HeroEnter, ParallaxMedia } from "@/components/motion";
 import { WhatsAppIcon } from "@/components/whatsapp-icon";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -28,22 +28,23 @@ export default function ContactPage() {
             sizes="100vw"
           />
         </ParallaxMedia>
-        <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(15,28,92,0.88),rgba(15,28,92,0.4))]" />
+        <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(8,16,48,0.9),rgba(15,28,92,0.42))]" />
+        <div className="mesh-glow absolute inset-0" />
         <div className="grain absolute inset-0" />
         <div className="relative mx-auto flex min-h-[48vh] max-w-7xl items-end px-5 pb-14 md:px-8">
-          <FadeUp>
+          <HeroEnter>
             <div className="section-rule mb-5" />
             <p className="text-sm font-bold tracking-[0.24em] text-[var(--brand-orange)]">
               CONTACT
             </p>
-            <h1 className="mt-3 max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
+            <h1 className="page-hero-title mt-3 max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
               Get in touch with our team
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-white/78">
               Reach Skyhoist for inspection, calibration, testing, training, and
               technical support across demanding industrial operations.
             </p>
-          </FadeUp>
+          </HeroEnter>
         </div>
       </section>
 
@@ -134,7 +135,10 @@ export default function ContactPage() {
         </FadeUp>
 
         <FadeUp delay={0.12}>
-          <div className="rounded-[1.6rem] border border-[var(--border)] bg-white p-6 shadow-[0_24px_60px_rgba(15,28,92,0.1)] md:p-8">
+          <div
+            data-cursor="hide"
+            className="rounded-[1.6rem] border border-[var(--border)] bg-white/90 p-6 shadow-[0_24px_60px_rgba(15,28,92,0.1)] backdrop-blur md:p-8"
+          >
             <h2 className="font-display text-2xl font-bold tracking-wide text-[var(--brand-ink)]">
               Tell us what your operation needs
             </h2>

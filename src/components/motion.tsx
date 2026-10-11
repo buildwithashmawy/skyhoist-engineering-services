@@ -28,7 +28,7 @@ function useRevealSafety(active: boolean) {
       setSafe(true);
       return;
     }
-    const t = window.setTimeout(() => setSafe(true), 1800);
+    const t = window.setTimeout(() => setSafe(true), 2000);
     return () => window.clearTimeout(t);
   }, [active]);
   return safe;
@@ -52,16 +52,17 @@ export function FadeUp({
       const el = ref.current;
       if (!el || reduce) return;
 
-      gsap.set(el, { opacity: 0, y: 32 });
+      gsap.set(el, { opacity: 0, y: 40, filter: "blur(6px)" });
       gsap.to(el, {
         opacity: 1,
         y: 0,
-        duration: 0.85,
+        filter: "blur(0px)",
+        duration: 1,
         delay,
-        ease: "power3.out",
+        ease: "power4.out",
         scrollTrigger: {
           trigger: el,
-          start: "top 88%",
+          start: "top 90%",
           once: true,
         },
       });
@@ -99,17 +100,19 @@ export function Stagger({
       const items = gsap.utils.toArray<HTMLElement>(".gsap-stagger-item", root);
       if (!items.length) return;
 
-      gsap.set(items, { opacity: 0, y: 30 });
+      gsap.set(items, { opacity: 0, y: 36, rotateX: 8 });
       gsap.to(items, {
         opacity: 1,
         y: 0,
-        duration: 0.75,
+        rotateX: 0,
+        duration: 0.85,
         delay,
-        stagger: 0.1,
-        ease: "power3.out",
+        stagger: 0.09,
+        ease: "power4.out",
+        transformPerspective: 800,
         scrollTrigger: {
           trigger: root,
-          start: "top 88%",
+          start: "top 90%",
           once: true,
         },
       });
@@ -118,7 +121,7 @@ export function Stagger({
   );
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={className} style={{ perspective: 1000 }}>
       {children}
     </div>
   );
@@ -162,13 +165,14 @@ export function HeroEnter({
       if (!el || reduce) return;
       gsap.fromTo(
         el,
-        { opacity: 0, y: 28 },
+        { opacity: 0, y: 36, filter: "blur(8px)" },
         {
           opacity: 1,
           y: 0,
-          duration: 0.9,
+          filter: "blur(0px)",
+          duration: 1.05,
           delay,
-          ease: "power3.out",
+          ease: "power4.out",
         },
       );
     },
@@ -177,6 +181,55 @@ export function HeroEnter({
 
   return (
     <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+}
+
+/** Clip-path wipe for headlines / key blocks. */
+export function RevealWipe({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = usePrefersReducedMotion();
+  const safe = useRevealSafety(reduce);
+
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el || reduce) return;
+      gsap.fromTo(
+        el,
+        { clipPath: "inset(0 0 100% 0)", opacity: 0.4 },
+        {
+          clipPath: "inset(0 0 0% 0)",
+          opacity: 1,
+          duration: 1.15,
+          delay,
+          ease: "power4.inOut",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 88%",
+            once: true,
+          },
+        },
+      );
+    },
+    { dependencies: [delay, reduce], revertOnUpdate: true },
+  );
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={safe || reduce ? undefined : { opacity: 0 }}
+    >
       {children}
     </div>
   );
@@ -207,12 +260,12 @@ export function CountUp({
       const state = { n: 0 };
       const tween = gsap.to(state, {
         n: value,
-        duration: 1.4,
-        ease: "power2.out",
+        duration: 1.6,
+        ease: "power3.out",
         onUpdate: () => setN(Math.round(state.n)),
         scrollTrigger: {
           trigger: el,
-          start: "top 85%",
+          start: "top 88%",
           once: true,
         },
       });
@@ -232,8 +285,45 @@ export function CountUp({
   );
 }
 
-/** Subtle parallax scale/shift for hero media layers. */
 export function ParallaxMedia({
+  children,
+  className,
+  amount = 14,
+}: {
+  children: ReactNode;
+  className?: string;
+  amount?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduce = usePrefersReducedMotion();
+
+  useGSAP(
+    () => {
+      const el = ref.current;
+      if (!el || reduce) return;
+      gsap.to(el, {
+        yPercent: amount,
+        ease: "none",
+        scrollTrigger: {
+          trigger: el.parentElement || el,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    },
+    { dependencies: [reduce, amount], revertOnUpdate: true },
+  );
+
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+}
+
+/** Soft horizontal drift for atmosphere bands. */
+export function DriftX({
   children,
   className,
 }: {
@@ -247,16 +337,20 @@ export function ParallaxMedia({
     () => {
       const el = ref.current;
       if (!el || reduce) return;
-      gsap.to(el, {
-        yPercent: 12,
-        ease: "none",
-        scrollTrigger: {
-          trigger: el.parentElement || el,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
+      gsap.fromTo(
+        el,
+        { xPercent: -4 },
+        {
+          xPercent: 4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
         },
-      });
+      );
     },
     { dependencies: [reduce], revertOnUpdate: true },
   );
