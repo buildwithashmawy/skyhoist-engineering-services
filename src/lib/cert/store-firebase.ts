@@ -23,13 +23,6 @@ function makeToken() {
   return randomBytes(32).toString("hex");
 }
 
-function normalizeCustomerStatus(status: string): CustomerStatus {
-  if (status === "pending" || status === "flagged" || status === "verified") {
-    return status;
-  }
-  return "verified";
-}
-
 function publicUser(user: CertUser) {
   return {
     id: user.id,
@@ -172,13 +165,17 @@ export const firebaseStore = {
   async listCustomers() {
     const snap = await getDb().collection(collections.customers).get();
     return snap.docs
-      .map((doc) => doc.data() as Customer)
+      .map((doc) => {
+        const data = doc.data() as Customer;
+        return { ...data, id: doc.id };
+      })
       .sort((a, b) => a.fullName.localeCompare(b.fullName));
   },
 
   async getCustomer(id: string) {
     const snap = await getDb().collection(collections.customers).doc(id).get();
-    return snap.exists ? (snap.data() as Customer) : null;
+    if (!snap.exists) return null;
+    return { ...(snap.data() as Customer), id: snap.id };
   },
 
   async upsertCustomer(input: {
@@ -191,7 +188,10 @@ export const firebaseStore = {
     const db = getDb();
     const fullName = input.fullName.trim();
     if (!fullName) throw new Error("Company name is required.");
-    const status = normalizeCustomerStatus(input.status);
+    const status =
+      input.status === "pending" || input.status === "flagged"
+        ? input.status
+        : "verified";
     const now = new Date().toISOString();
     if (input.id) {
       const ref = db.collection(collections.customers).doc(input.id);
@@ -199,6 +199,7 @@ export const firebaseStore = {
       if (!snap.exists) throw new Error("Customer not found.");
       const next: Customer = {
         ...(snap.data() as Customer),
+        id: snap.id,
         fullName,
         email: (input.email || "").trim(),
         phone: (input.phone || "").trim(),
@@ -245,7 +246,10 @@ export const firebaseStore = {
       customersSnap.docs.map((doc) => [doc.id, doc.data() as Customer]),
     );
     return certsSnap.docs
-      .map((doc) => doc.data() as Certificate)
+      .map((doc) => {
+        const cert = doc.data() as Certificate;
+        return { ...cert, id: doc.id };
+      })
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
       .map((cert) => ({
         ...cert,
@@ -257,14 +261,16 @@ export const firebaseStore = {
     const db = getDb();
     const snap = await db.collection(collections.certificates).doc(id).get();
     if (!snap.exists) return null;
-    const cert = snap.data() as Certificate;
+    const cert = { ...(snap.data() as Certificate), id: snap.id };
     const customerSnap = await db
       .collection(collections.customers)
       .doc(cert.customerId)
       .get();
     return {
       ...cert,
-      customer: customerSnap.exists ? (customerSnap.data() as Customer) : null,
+      customer: customerSnap.exists
+        ? { ...(customerSnap.data() as Customer), id: customerSnap.id }
+        : null,
     };
   },
 
@@ -334,6 +340,7 @@ export const firebaseStore = {
       const nextPages = input.pages ?? prev.pages;
       const next: Certificate = {
         ...prev,
+        id: snap.id,
         certificateNo,
         customerId,
         expireDate,
