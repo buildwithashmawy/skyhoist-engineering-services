@@ -43,7 +43,7 @@ export default function ServicesPage() {
               SERVICES
             </p>
             <h1 className="page-hero-title mt-3 max-w-3xl font-display text-5xl font-bold tracking-wide text-white md:text-6xl">
-              A full technical service line for industrial work
+              A complete technical service portfolio for industrial work
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-white/78">
               Independent inspection, reliable calibration, practical training,
