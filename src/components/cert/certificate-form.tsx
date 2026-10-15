@@ -188,7 +188,7 @@ export function CertificateForm({ certificateId }: Props) {
       <PageHeader
         eyebrow="ORGANIZATION REGISTRY"
         title={certificateId ? "Edit Certificate" : "New Institutional Certificate"}
-        description="Certificates are shared across the whole organization \u2014 every admin and inspector sees the same archive."
+        description="Certificates are shared across the whole organization — every admin and inspector sees the same archive."
         breadcrumb={[
           { label: "Archive", href: "/certificate/admin/certificates/" },
           { label: "Certificates", href: "/certificate/admin/certificates/" },
@@ -294,7 +294,7 @@ export function CertificateForm({ certificateId }: Props) {
 
               <div className="rounded-2xl border border-[#d7c8ad] bg-[#f6f1e7] p-5">
                 <h3 className="font-display text-lg font-bold text-[#171310]">
-                  Document Repository (Pages 1\u20135)
+                  Document Repository (Pages 1–5)
                 </h3>
                 <div className="mt-4 grid gap-3">
                   {pages.map((page, index) => {
@@ -327,7 +327,7 @@ export function CertificateForm({ certificateId }: Props) {
                         <div className="flex flex-wrap items-center gap-2">
                           <label className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-black px-4 py-2 text-xs font-bold text-white">
                             {uploadingPage === pageNo
-                              ? "Uploading\u2026"
+                              ? "Uploading…"
                               : page
                                 ? "Replace file"
                                 : "Upload file"}
@@ -366,7 +366,7 @@ export function CertificateForm({ certificateId }: Props) {
                   disabled={loading || (customersLoaded && customers.length === 0)}
                 >
                   {loading
-                    ? "Saving\u2026"
+                    ? "Saving…"
                     : certificateId
                       ? "Save Changes"
                       : "Create Certificate"}
@@ -382,10 +382,10 @@ export function CertificateForm({ certificateId }: Props) {
         <ComplianceCard
           title="Quick Guidelines"
           items={[
-            "This is an organization-level registry \u2014 certificates are shared by all users.",
+            "This is an organization-level registry — certificates are shared by all users.",
             "Create the company in Customer Ledger first, then link the certificate.",
             "Company name is required; blank names are rejected.",
-            "Keep the verification token unique \u2014 it powers the public QR page.",
+            "Keep the verification token unique — it powers the public QR page.",
             "Upload up to five document pages (PDF or image) for field verification.",
             "Use Valid only when the certificate is ready for public checks.",
           ]}
