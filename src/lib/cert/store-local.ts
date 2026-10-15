@@ -22,13 +22,6 @@ const DATA_DIR =
 const STORE_PATH = path.join(DATA_DIR, "certificate-store.json");
 const UPLOAD_DIR = path.join(DATA_DIR, "uploads");
 
-function normalizeCustomerStatus(status: string): CustomerStatus {
-  if (status === "pending" || status === "flagged" || status === "verified") {
-    return status;
-  }
-  return "verified";
-}
-
 async function ensureDirs() {
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
@@ -178,7 +171,10 @@ export const localStore = {
     const store = await readStore();
     const fullName = input.fullName.trim();
     if (!fullName) throw new Error("Company name is required.");
-    const status = normalizeCustomerStatus(input.status);
+    const status =
+      input.status === "pending" || input.status === "flagged"
+        ? input.status
+        : "verified";
     const now = new Date().toISOString();
     if (input.id) {
       const idx = store.customers.findIndex((c) => c.id === input.id);
@@ -257,7 +253,9 @@ export const localStore = {
   }) {
     const store = await readStore();
     const customerId = input.customerId.trim();
-    if (!customerId) throw new Error("Select a customer before creating a certificate.");
+    if (!customerId) {
+      throw new Error("Select a customer before creating a certificate.");
+    }
     if (!store.customers.some((c) => c.id === customerId)) {
       throw new Error("Customer not found. Add the company in Customer Ledger first.");
     }
