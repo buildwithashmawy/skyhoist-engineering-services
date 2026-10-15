@@ -46,14 +46,14 @@ export const services: Service[] = [
       {
         heading: "Approach & services",
         paragraphs: [
-          "Elevators, escalators, and other people-moving systems deserve focused technical supervision. Even when manufacturers, installers, and site operators do their part, independent safety inspections add a high-value control at a modest share of operating cost.",
+          "Elevators, escalators, and other people-moving systems deserve focused technical supervision. Even when manufacturers, installers, and site operators do their part, independent safety inspections add a high-value layer of control at a modest share of operating cost.",
           "We review design and technical documentation, run hazard analyses, and check the safety of devices and components—including safety control systems—so you can demonstrate compliance with confidence.",
         ],
       },
       {
         heading: "Elevator & escalator inspection and certification",
         paragraphs: [
-          "Skyhoist technicians examine and test elevators, escalators, and safety components against harmonized standards. After the assessment, we issue a structured test report and, where applicable, a certificate of conformity.",
+          "Our technicians examine and test elevators, escalators, and safety components against harmonized standards. After the assessment, we issue a structured test report and, where applicable, a certificate of conformity.",
           "Periodic inspections build a clear picture of system condition over time, which helps maintenance teams prioritize work, order parts earlier, and avoid unplanned outages.",
         ],
         bullets: [
@@ -78,7 +78,7 @@ export const services: Service[] = [
       {
         heading: "Related inspection disciplines",
         paragraphs: [
-          "When your scope expands beyond people-elevation systems, Skyhoist also fields specialist programs for rig, tubular, NDT, lifting, dropped-object, and rope-access inspection—so one technical partner can cover connected risk areas.",
+          "When your scope expands beyond people-elevation systems, we also field specialist programs for rig, tubular, NDT, lifting, dropped-object, and rope-access inspection—so one technical partner can cover connected risk areas.",
         ],
       },
     ],
@@ -92,7 +92,7 @@ export const services: Service[] = [
     description:
       "Skyhoist helps operators and drilling contractors protect safety and uptime with professional rig inspection programs. We focus on condition monitoring, early defect detection, and operational integrity against current oil and gas standards.",
     points: [
-      "Rig, drill-pipe, and tubular condition monitoring",
+      "Rig, drill pipe, and tubular equipment condition monitoring",
       "Detection of corrosion, wall loss, and fatigue cracks",
       "Integrity checks against current regulations",
       "Clear reporting for safe facility operation",
@@ -107,8 +107,8 @@ export const services: Service[] = [
       {
         heading: "Why rig inspection matters",
         paragraphs: [
-          "Drilling and well-construction assets work under constant mechanical and environmental stress. Small defects that go unnoticed can escalate into downtime, environmental risk, or serious incidents.",
-          "Skyhoist combines specialized engineers and technicians with practical field methods so inspection programs stay cost-effective without sacrificing technical rigor.",
+          "Drilling and well-construction assets work under constant mechanical and environmental stress. Small defects that go unnoticed can escalate to downtime, environmental risk, or serious incidents.",
+          "We combine specialized engineers and technicians with practical field methods so inspection programs stay cost-effective without sacrificing technical rigor.",
         ],
       },
       {
@@ -120,7 +120,7 @@ export const services: Service[] = [
           "Condition surveys for drilling packages and associated tubular equipment",
           "Defect detection before damage becomes severe",
           "Documentation ready for operational and compliance reviews",
-          "Field teams experienced in oil and gas delivery environments",
+          "Field teams experienced in oil and gas operating environments",
         ],
       },
     ],
@@ -130,12 +130,12 @@ export const services: Service[] = [
     slug: "tubular-inspection",
     title: "Tubular Inspection",
     summary:
-      "BHA, drill-pipe, tubing, and casing inspection to client-nominated standards.",
+      "BHA, drill pipe, tubing, and casing inspection to client-nominated standards.",
     description:
       "Skyhoist tubular inspection programs help drilling teams protect performance and reduce unexpected failures. We inspect bottom-hole assemblies, specialty tools, drill pipe, tubing, and casing using methods matched to site conditions and the standards you nominate.",
     points: [
       "BHA inspection to API RP7, DS-1, NS-2, or client standards",
-      "Drill-pipe EMI and magnetic-flow inspection",
+      "Drill pipe EMI and magnetic-flow inspection",
       "Tubing and casing visual, drift, and thread checks",
       "Cleaning, coating, hardness, and UT wall-thickness support",
     ],
@@ -149,7 +149,7 @@ export const services: Service[] = [
       {
         heading: "Bottom-hole assembly",
         paragraphs: [
-          "A well-maintained BHA underpins drilling performance. Skyhoist conducts BHA inspections to API RP7, DS-1, NS-2, or other standards nominated by the commissioning client, with reporting that field teams can act on quickly.",
+          "A well-maintained BHA underpins drilling performance. We conduct BHA inspections to API RP7, DS-1, NS-2, or other standards nominated by the commissioning client, with reporting that field teams can act on quickly.",
         ],
       },
       {
@@ -161,7 +161,7 @@ export const services: Service[] = [
       {
         heading: "Drill pipe",
         paragraphs: [
-          "Drill-pipe inspection follows customer-nominated standards and techniques suited to drilling conditions and failure history. Electromagnetic inspection (EMI) is applied at intervals guided by risk, while A.C. yoke magnetic-flow methods cover many routine inspections. Sandblasting preparation is available when surface condition must be restored before examination.",
+          "Drill pipe inspection follows client-nominated standards and techniques suited to drilling conditions and failure history. Electromagnetic inspection (EMI) is applied at intervals guided by risk, while AC yoke MFL (magnetic flux leakage) methods cover many routine inspections. Sandblasting preparation is available when surface condition must be restored before examination.",
         ],
       },
       {
@@ -208,7 +208,7 @@ export const services: Service[] = [
       {
         heading: "Visual testing (VT)",
         paragraphs: [
-          "Visual examination is performed with or without optical aids such as magnifiers, borescopes, and fiber-optic devices. Skyhoist inspectors are trained to identify surface flaws and diagnose incongruities through structured visual assessment.",
+          "Visual examination is performed with or without optical aids such as magnifiers, borescopes, and fiber-optic devices. Our inspectors are trained to identify surface flaws and diagnose incongruities through structured visual assessment.",
         ],
       },
       {
@@ -253,7 +253,7 @@ export const services: Service[] = [
       {
         heading: "Advanced NDT",
         paragraphs: [
-          "When conventional methods are too slow, too limited, or impractical for access, Skyhoist deploys advanced techniques used heavily in oil and gas, power, and chemicals.",
+          "When conventional methods are too slow, too limited, or impractical for access, We deploy advanced techniques used heavily in oil and gas, power, and chemicals.",
         ],
       },
       {
@@ -285,16 +285,16 @@ export const services: Service[] = [
     summary:
       "Statutory and voluntary inspection for hoisting and material-handling equipment.",
     description:
-      "Skyhoist provides professional statutory and voluntary lifting inspections backed by experienced technicians and the right equipment. We help you meet regulatory duties, confirm safe working condition, and protect availability of critical lifting assets.",
+      "Skyhoist provides professional statutory and voluntary lifting inspections backed by experienced technicians and the right equipment. We help you meet regulatory duties, confirm safe working conditions, and protect availability of critical lifting assets.",
     points: [
       "Personnel-handling devices and elevating work platforms",
-      "Cranes, derricks, fork-lifts, shackles, hooks, and telehandlers",
+      "Appliances and accessories",
       "Independent inspection to applicable standards",
-      "Programs that protect uptime and planned outages",
+      "Programs that protect uptime during planned outages",
     ],
     outcomes: [
       "Meet regulatory requirements through independent inspection",
-      "Assure safe working capability of cranes and hoisting equipment",
+      "Ensure safe working capability of hoisting equipment",
       "Maintain equipment capability and availability",
       "Maximize uptime by aligning inspections with planned outages",
     ],
@@ -308,7 +308,7 @@ export const services: Service[] = [
       {
         heading: "Material-handling devices",
         paragraphs: [
-          "We inspect cranes, derricks, fork-lifts, mobile cranes, shackles, hooks, elevating platforms, telehandlers, and related lifting accessories used across industrial and energy sites.",
+          "We inspect appliances and accessories, including cranes, derricks, forklifts, mobile cranes, shackles, hooks, elevating platforms, and telehandlers used across industrial and energy sites.",
         ],
       },
       {
@@ -331,7 +331,7 @@ export const services: Service[] = [
     description:
       "Falling objects still cause serious injuries and fatalities on industrial sites. Skyhoist DROPS surveys identify loose, corroded, weather-damaged, or poorly secured items at height, then deliver photo-backed reports and practical recommendations for immediate and ongoing control.",
     points: [
-      "Surveys from loose-item sweeps to full inventories",
+      "Surveys ranging from loose-item sweeps to full inventories",
       "Photo reports with immediate-action flags",
       "Coverage for derricks, masts, rigs, cranes, and flare stacks",
       "Recommendations for continuous DROPS prevention",
@@ -339,7 +339,7 @@ export const services: Service[] = [
     outcomes: [
       "Identify non-conforming items before they fall",
       "Scale surveys from quick sweeps to full structure inventories",
-      "Act on photo-supported findings immediately after the survey",
+      "Act on photo-backed findings immediately after the survey",
       "Build a clearer maintenance and re-inspection plan",
     ],
     sections: [
@@ -383,7 +383,7 @@ export const services: Service[] = [
     slug: "rope-access-inspections",
     title: "Rope Access Inspections",
     summary:
-      "IRATA-aware rope access for inspection and work where scaffolding is impractical.",
+      "IRATA-compliant rope access for inspection and work where scaffolding is impractical.",
     description:
       "Rope access is a proven alternative to scaffolding and MEWPs when traditional access is slow, costly, or simply not viable. Skyhoist rope-access teams deliver safe, efficient inspection and complementary work at height across energy and industrial sites.",
     points: [
@@ -393,10 +393,10 @@ export const services: Service[] = [
       "Trained personnel following current rope-access practice",
     ],
     outcomes: [
-      "Reach difficult locations without heavy access build-ups",
+      "Reach difficult locations without heavy access build-up",
       "Complete inspection and maintenance scopes faster at height",
       "Reduce scaffolding cost and schedule impact",
-      "Combine access with NDT, rigging, and fabric-maintenance tasks",
+      "Combine access with NDT, rigging, and fabric maintenance tasks",
     ],
     sections: [
       {
@@ -408,7 +408,7 @@ export const services: Service[] = [
       {
         heading: "Training and competence",
         paragraphs: [
-          "Skyhoist rope-access personnel are trained to high standards and kept current with IRATA-related practice and legislation. That competence underpins both inspection quality and on-site safety performance.",
+          "Our rope-access personnel are trained to high standards and kept current with IRATA-related practice and legislation. That competence underpins both inspection quality and on-site safety performance.",
         ],
       },
       {
@@ -467,7 +467,7 @@ export const services: Service[] = [
       {
         heading: "Temperature device calibration",
         paragraphs: [
-          "Temperature instruments need periodic calibration so process and safety decisions rest on correct readings. Skyhoist supports common temperature sensors and systems used in industrial environments.",
+          "Temperature instruments need periodic calibration so process and safety decisions rest on correct readings. We support common temperature sensors and systems used in industrial environments.",
         ],
         bullets: [
           "Temperature sensors",
@@ -532,7 +532,7 @@ export const services: Service[] = [
     description:
       "Skyhoist training programs are built by subject-matter experts to strengthen competence, safety awareness, and field readiness. We deliver public courses, in-house sessions, eLearning, virtual classrooms, and blended pathways for industrial organizations.",
     points: [
-      "Operations, electrical/instrument, and safety curricula",
+      "Operations, electrical/instrument, and safety curriculum",
       "Face-to-face, virtual, and blended delivery",
       "Practical courses beyond theory-only instruction",
       "Programs scaled for crews and supervisory teams",
@@ -540,7 +540,7 @@ export const services: Service[] = [
     outcomes: [
       "Raise personal competence with expert-led programs",
       "Deliver consistent training across sites and formats",
-      "Cover lifting, E&I, and safety-critical topics in one partner",
+      "Cover lifting, E&I, and safety-critical topics with one partner",
       "Connect learning to real operating conditions",
     ],
     sections: [
@@ -554,7 +554,7 @@ export const services: Service[] = [
         heading: "Operations programs",
         bullets: [
           "Lifting supervision, rigging and slinging, appointed person, and lifting management",
-          "MEWP, EOT crane, banksman/slinger, crane, and forklift operator training",
+          "MEWP, EOT crane, banksman / slinger, crane, and forklift operator training",
           "Scaffolding inspection",
           "Dropped-object inspection awareness",
         ],
@@ -798,7 +798,7 @@ export const services: Service[] = [
       {
         heading: "Our QHSE objective",
         paragraphs: [
-          "Beyond compliance, Skyhoist is committed to continuous improvement that strengthens customer satisfaction, protects people, prevents pollution, conserves resources, and upholds ethical standards across the business.",
+          "Beyond compliance, we are committed to continuous improvement that strengthens customer satisfaction, protects people, prevents pollution, conserves resources, and upholds ethical standards across the business.",
         ],
       },
       {
