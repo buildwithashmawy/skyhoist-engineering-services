@@ -13,6 +13,10 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from "@/components/cert/ui";
+import {
+  validateCustomerInput,
+  type FieldErrors,
+} from "@/lib/cert/validate";
 
 export default function NewCustomerPage() {
   const router = useRouter();
@@ -21,34 +25,47 @@ export default function NewCustomerPage() {
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState("verified");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setError("");
-    if (!fullName.trim()) {
-      setError("Company name is required.");
-      return;
-    }
-    setLoading(true);
-    const res = await fetch("/api/cert/customers/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        fullName: fullName.trim(),
-        email,
-        phone,
-        status,
-      }),
+    setFieldErrors({});
+
+    const checked = validateCustomerInput({
+      fullName,
+      email,
+      phone,
+      status,
     });
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) {
-      setError(data.error || "Could not create customer.");
+    if (!checked.ok) {
+      setFieldErrors(checked.errors);
+      setError(checked.message);
       return;
     }
-    router.push("/certificate/admin/customers/");
-    router.refresh();
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/cert/customers/", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(checked.data),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setFieldErrors((data.errors || {}) as FieldErrors);
+        setError(data.error || "Could not create customer.");
+        setLoading(false);
+        return;
+      }
+      router.push("/certificate/admin/customers/");
+      router.refresh();
+    } catch {
+      setError("Could not create customer. Check your connection and try again.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -66,27 +83,49 @@ export default function NewCustomerPage() {
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <Panel accent>
           <PanelBody>
-            <form className="space-y-5" onSubmit={onSubmit}>
+            <form className="space-y-5" onSubmit={onSubmit} method="post" noValidate>
               {error ? (
                 <div className="rounded-xl bg-[#ffdad6] px-4 py-3 text-sm text-[#93000a]">
                   {error}
                 </div>
               ) : null}
-              <Field label="Company Name">
+              <Field
+                label="Company Name"
+                required
+                error={fieldErrors.fullName}
+              >
                 <input
-                  className={inputClass}
+                  className={
+                    fieldErrors.fullName
+                      ? `${inputClass} border-[#93000a] focus:border-[#93000a]`
+                      : inputClass
+                  }
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    setFieldErrors((prev) => ({ ...prev, fullName: "" }));
+                  }}
                   placeholder="Company legal name"
                   required
+                  aria-required="true"
                 />
               </Field>
-              <Field label="Email Address (Optional)">
+              <Field
+                label="Email Address (Optional)"
+                error={fieldErrors.email}
+              >
                 <input
-                  className={inputClass}
+                  className={
+                    fieldErrors.email
+                      ? `${inputClass} border-[#93000a] focus:border-[#93000a]`
+                      : inputClass
+                  }
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setFieldErrors((prev) => ({ ...prev, email: "" }));
+                  }}
                   placeholder="Official email address"
                 />
               </Field>
@@ -123,7 +162,7 @@ export default function NewCustomerPage() {
         <ComplianceCard
           title="Quick Guidelines"
           items={[
-            "Use the legal company name exactly as it should appear on certificates.",
+            "Company name is required — use the legal name exactly as it should appear on certificates.",
             "Email and phone are optional but help inspectors reach the client later.",
             "Mark Flagged if the company needs review before new certificates.",
             "After saving, the company appears in the Add Certificate dropdown.",
