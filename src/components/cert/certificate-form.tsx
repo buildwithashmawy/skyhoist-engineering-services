@@ -14,6 +14,11 @@ import {
   SecondaryButton,
 } from "@/components/cert/ui";
 import type { CertificatePageFile, Customer } from "@/lib/cert/types";
+import {
+  defaultExpireDate,
+  validateCertificateInput,
+  type FieldErrors,
+} from "@/lib/cert/validate";
 
 type Props = {
   certificateId?: string;
@@ -25,10 +30,17 @@ function randomToken() {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+function fieldClass(hasError: boolean) {
+  return hasError
+    ? `${inputClass} border-[#93000a] focus:border-[#93000a]`
+    : inputClass;
+}
+
 export function CertificateForm({ certificateId }: Props) {
   const router = useRouter();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [customersLoaded, setCustomersLoaded] = useState(false);
+  const [customersError, setCustomersError] = useState("");
   const [certificateNo, setCertificateNo] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [expireDate, setExpireDate] = useState("");
@@ -43,25 +55,44 @@ export function CertificateForm({ certificateId }: Props) {
     null,
   ]);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
   const [uploadingPage, setUploadingPage] = useState<number | null>(null);
 
+  async function loadCustomers() {
+    setCustomersError("");
+    const customersRes = await fetch("/api/cert/customers/", {
+      credentials: "include",
+    });
+    const customersData = await customersRes.json().catch(() => ({}));
+    if (!customersRes.ok) {
+      setCustomers([]);
+      setCustomersError(
+        customersData.error ||
+          "Could not load customers. Sign in again, then retry.",
+      );
+      setCustomersLoaded(true);
+      return;
+    }
+    const list = Array.isArray(customersData.customers)
+      ? (customersData.customers as Customer[])
+      : [];
+    setCustomers(
+      list.filter((c) => Boolean(c.id?.trim()) && Boolean(c.fullName?.trim())),
+    );
+    setCustomersLoaded(true);
+  }
+
   useEffect(() => {
     async function bootstrap() {
-      const customersRes = await fetch("/api/cert/customers/");
-      const customersData = await customersRes.json();
-      if (customersRes.ok) {
-        setCustomers(
-          (customersData.customers as Customer[]).filter((c) =>
-            Boolean(c.fullName?.trim()),
-          ),
-        );
-      }
-      setCustomersLoaded(true);
+      await loadCustomers();
 
       if (!certificateId) {
         setVerificationToken(randomToken());
-        const nextRes = await fetch("/api/cert/certificates/?nextNumber=1");
+        setExpireDate(defaultExpireDate(12));
+        const nextRes = await fetch("/api/cert/certificates/?nextNumber=1", {
+          credentials: "include",
+        });
         const nextData = await nextRes.json().catch(() => ({}));
         if (nextRes.ok && nextData.nextCertificateNo) {
           setCertificateNo(String(nextData.nextCertificateNo));
@@ -69,8 +100,10 @@ export function CertificateForm({ certificateId }: Props) {
         return;
       }
 
-      const res = await fetch(`/api/cert/certificates/${certificateId}/`);
-      const data = await res.json();
+      const res = await fetch(`/api/cert/certificates/${certificateId}/`, {
+        credentials: "include",
+      });
+      const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data.error || "Certificate not found.");
         return;
@@ -78,7 +111,7 @@ export function CertificateForm({ certificateId }: Props) {
       const cert = data.certificate;
       setCertificateNo(cert.certificateNo);
       setCustomerId(cert.customerId);
-      setExpireDate(cert.expireDate || "");
+      setExpireDate(cert.expireDate || defaultExpireDate(12));
       setStatus(cert.status);
       setVerificationToken(cert.verificationToken);
       setNotes(cert.notes || "");
@@ -98,8 +131,12 @@ export function CertificateForm({ certificateId }: Props) {
     const form = new FormData();
     form.set("file", file);
     form.set("page", String(page));
-    const res = await fetch("/api/cert/upload/", { method: "POST", body: form });
-    const data = await res.json();
+    const res = await fetch("/api/cert/upload/", {
+      method: "POST",
+      body: form,
+      credentials: "include",
+    });
+    const data = await res.json().catch(() => ({}));
     setUploadingPage(null);
     if (!res.ok) {
       setError(data.error || "Upload failed.");
@@ -132,63 +169,87 @@ export function CertificateForm({ certificateId }: Props) {
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     setError("");
-    if (!certificateNo.trim()) {
-      setError("Certificate number is required.");
-      return;
-    }
-    if (!customerId) {
+    setFieldErrors({});
+
+    if (customersLoaded && customers.length === 0) {
       setError(
-        customers.length === 0
-          ? "Add a company in Customer Ledger before creating a certificate."
-          : "Select a customer entity for this certificate.",
+        "Add a company in Customer Ledger before creating a certificate.",
       );
-      return;
-    }
-    if (!expireDate) {
-      setError("Expire date is required.");
-      return;
-    }
-    if (!verificationToken.trim()) {
-      setError("Verification token is required.");
+      setFieldErrors({
+        customerId:
+          "Add a company in Customer Ledger before creating a certificate.",
+      });
       return;
     }
 
-    setLoading(true);
-    const payload = {
-      certificateNo: certificateNo.trim(),
+    const checked = validateCertificateInput({
+      certificateNo,
       customerId,
       expireDate,
       status,
       notes,
-      verificationToken: verificationToken.trim(),
+      verificationToken,
       pages: pages.filter(Boolean),
-    };
-    const res = await fetch(
-      certificateId
-        ? `/api/cert/certificates/${certificateId}/`
-        : "/api/cert/certificates/",
-      {
-        method: certificateId ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      },
-    );
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) {
-      setError(data.error || "Could not save certificate.");
+    });
+    if (!checked.ok) {
+      setFieldErrors(checked.errors);
+      setError(checked.message);
       return;
     }
-    router.push("/certificate/admin/certificates/");
-    router.refresh();
+
+    if (!customers.some((c) => c.id === checked.data.customerId)) {
+      setFieldErrors({
+        customerId: "Select a customer from the organization ledger.",
+      });
+      setError("Select a customer from the organization ledger.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(
+        certificateId
+          ? `/api/cert/certificates/${certificateId}/`
+          : "/api/cert/certificates/",
+        {
+          method: certificateId ? "PUT" : "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            certificateNo: checked.data.certificateNo,
+            customerId: checked.data.customerId,
+            expireDate: checked.data.expireDate,
+            status: checked.data.status,
+            notes: checked.data.notes,
+            verificationToken: checked.data.verificationToken,
+            pages: checked.data.pages,
+          }),
+        },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const apiErrors = (data.errors || {}) as FieldErrors;
+        setFieldErrors(apiErrors);
+        setError(data.error || "Could not save certificate.");
+        setLoading(false);
+        return;
+      }
+      router.push("/certificate/admin/certificates/");
+      router.refresh();
+    } catch {
+      setError("Could not save certificate. Check your connection and try again.");
+      setLoading(false);
+    }
   }
+
+  const canCreate = !(customersLoaded && customers.length === 0) && !customersError;
 
   return (
     <>
       <PageHeader
         eyebrow="ORGANIZATION REGISTRY"
         title={certificateId ? "Edit Certificate" : "New Institutional Certificate"}
-        description="Certificates are shared across the whole organization — every admin and inspector sees the same archive."
+        description="Certificates are shared across the whole organization - every admin and inspector sees the same archive."
         breadcrumb={[
           { label: "Archive", href: "/certificate/admin/certificates/" },
           { label: "Certificates", href: "/certificate/admin/certificates/" },
@@ -199,13 +260,25 @@ export function CertificateForm({ certificateId }: Props) {
       <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <Panel accent>
           <PanelBody>
-            <form className="space-y-5" onSubmit={onSubmit}>
+            <form className="space-y-5" onSubmit={onSubmit} method="post" noValidate>
               {error ? (
                 <div className="rounded-xl bg-[#ffdad6] px-4 py-3 text-sm text-[#93000a]">
                   {error}
                 </div>
               ) : null}
-              {customersLoaded && customers.length === 0 ? (
+              {customersError ? (
+                <div className="rounded-xl border border-[#93000a]/25 bg-[#ffdad6] px-4 py-3 text-sm text-[#93000a]">
+                  {customersError}{" "}
+                  <button
+                    type="button"
+                    className="font-semibold underline underline-offset-2"
+                    onClick={() => void loadCustomers()}
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : null}
+              {customersLoaded && customers.length === 0 && !customersError ? (
                 <div className="rounded-xl border border-[var(--brand-orange)]/35 bg-[var(--brand-sky)] px-4 py-3 text-sm text-[var(--brand-ink)]">
                   No companies are registered yet.{" "}
                   <Link
@@ -214,27 +287,42 @@ export function CertificateForm({ certificateId }: Props) {
                   >
                     Add a customer
                   </Link>{" "}
-                  first, then return here to issue the certificate.
+                  first - company name is required - then return here to issue
+                  the certificate.
                 </div>
               ) : null}
-              <Field label="Certificate No.">
+              <Field
+                label="Certificate No."
+                required
+                error={fieldErrors.certificateNo}
+              >
                 <input
-                  className={inputClass}
+                  className={fieldClass(Boolean(fieldErrors.certificateNo))}
                   value={certificateNo}
-                  onChange={(e) => setCertificateNo(e.target.value)}
+                  onChange={(e) => {
+                    setCertificateNo(e.target.value);
+                    setFieldErrors((prev) => ({ ...prev, certificateNo: "" }));
+                  }}
                   placeholder="Certificate number"
                   required
+                  aria-required="true"
                 />
               </Field>
               <Field
                 label="Customer Entity"
+                required
+                error={fieldErrors.customerId}
                 hint="Pick from the shared organization customer ledger."
               >
                 <select
-                  className={inputClass}
+                  className={fieldClass(Boolean(fieldErrors.customerId))}
                   value={customerId}
-                  onChange={(e) => setCustomerId(e.target.value)}
+                  onChange={(e) => {
+                    setCustomerId(e.target.value);
+                    setFieldErrors((prev) => ({ ...prev, customerId: "" }));
+                  }}
                   required
+                  aria-required="true"
                   disabled={customers.length === 0}
                 >
                   <option value="">
@@ -250,13 +338,21 @@ export function CertificateForm({ certificateId }: Props) {
                 </select>
               </Field>
               <div className="grid gap-5 md:grid-cols-2">
-                <Field label="Expire Date">
+                <Field
+                  label="Expire Date"
+                  required
+                  error={fieldErrors.expireDate}
+                >
                   <input
-                    className={inputClass}
+                    className={fieldClass(Boolean(fieldErrors.expireDate))}
                     type="date"
                     value={expireDate}
-                    onChange={(e) => setExpireDate(e.target.value)}
+                    onChange={(e) => {
+                      setExpireDate(e.target.value);
+                      setFieldErrors((prev) => ({ ...prev, expireDate: "" }));
+                    }}
                     required
+                    aria-required="true"
                   />
                 </Field>
                 <Field label="Status">
@@ -274,13 +370,25 @@ export function CertificateForm({ certificateId }: Props) {
               </div>
               <Field
                 label="Verification Token"
+                required
+                error={fieldErrors.verificationToken}
                 hint="Pre-generated 64-character hex token used by the public verification page and QR code."
               >
                 <input
-                  className={`${inputClass} font-mono text-xs`}
+                  className={`${fieldClass(Boolean(fieldErrors.verificationToken))} font-mono text-xs`}
                   value={verificationToken}
-                  onChange={(e) => setVerificationToken(e.target.value)}
+                  onChange={(e) => {
+                    setVerificationToken(e.target.value);
+                    setFieldErrors((prev) => ({
+                      ...prev,
+                      verificationToken: "",
+                    }));
+                  }}
                   required
+                  aria-required="true"
+                  minLength={64}
+                  maxLength={64}
+                  pattern="[a-fA-F0-9]{64}"
                 />
               </Field>
               <Field label="Notes">
@@ -294,8 +402,12 @@ export function CertificateForm({ certificateId }: Props) {
 
               <div className="rounded-2xl border border-[#d7c8ad] bg-[#f6f1e7] p-5">
                 <h3 className="font-display text-lg font-bold text-[#171310]">
-                  Document Repository (Pages 1–5)
+                  Document Repository (Pages 1-5)
                 </h3>
+                <p className="mt-1 text-xs text-[#8a7c61]">
+                  Optional - you can create the certificate now and upload pages
+                  later.
+                </p>
                 <div className="mt-4 grid gap-3">
                   {pages.map((page, index) => {
                     const pageNo = index + 1;
@@ -327,7 +439,7 @@ export function CertificateForm({ certificateId }: Props) {
                         <div className="flex flex-wrap items-center gap-2">
                           <label className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-black px-4 py-2 text-xs font-bold text-white">
                             {uploadingPage === pageNo
-                              ? "Uploading…"
+                              ? "Uploading..."
                               : page
                                 ? "Replace file"
                                 : "Upload file"}
@@ -361,12 +473,9 @@ export function CertificateForm({ certificateId }: Props) {
               </div>
 
               <div className="flex flex-wrap gap-3 pt-2">
-                <PrimaryButton
-                  type="submit"
-                  disabled={loading || (customersLoaded && customers.length === 0)}
-                >
+                <PrimaryButton type="submit" disabled={loading || !canCreate}>
                   {loading
-                    ? "Saving…"
+                    ? "Saving..."
                     : certificateId
                       ? "Save Changes"
                       : "Create Certificate"}
@@ -382,11 +491,10 @@ export function CertificateForm({ certificateId }: Props) {
         <ComplianceCard
           title="Quick Guidelines"
           items={[
-            "This is an organization-level registry — certificates are shared by all users.",
-            "Create the company in Customer Ledger first, then link the certificate.",
-            "Company name is required; blank names are rejected.",
-            "Keep the verification token unique — it powers the public QR page.",
-            "Upload up to five document pages (PDF or image) for field verification.",
+            "Required before create: certificate number, customer, expire date, and verification token.",
+            "Create the company in Customer Ledger first (company name required), then link it here.",
+            "Document pages are optional - issue the certificate first if files are not ready.",
+            "Keep the verification token unique - it powers the public QR page.",
             "Use Valid only when the certificate is ready for public checks.",
           ]}
         />
