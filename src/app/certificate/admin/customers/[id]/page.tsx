@@ -86,12 +86,13 @@ export default function EditCustomerPage() {
                 {error}
               </div>
             ) : null}
-            <Field label="Company Name">
+            <Field label="Company Name" required>
               <input
                 className={inputClass}
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
+                aria-required="true"
               />
             </Field>
             <Field label="Email Address (Optional)">
@@ -122,7 +123,7 @@ export default function EditCustomerPage() {
             </Field>
             <div className="flex flex-wrap gap-3 pt-2">
               <PrimaryButton type="submit" disabled={loading}>
-                {loading ? "Saving…" : "Save Changes"}
+                {loading ? "Saving\u2026" : "Save Changes"}
               </PrimaryButton>
               <Link href="/certificate/admin/customers/">
                 <SecondaryButton type="button">Back</SecondaryButton>
