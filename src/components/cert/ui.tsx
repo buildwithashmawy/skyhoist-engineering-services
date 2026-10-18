@@ -93,18 +93,31 @@ export function Field({
   label,
   children,
   hint,
+  required = false,
+  error,
 }: {
   label: string;
   children: React.ReactNode;
   hint?: string;
+  required?: boolean;
+  error?: string;
 }) {
   return (
     <label className="block space-y-2">
       <span className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--brand-steel)]">
         {label}
+        {required ? (
+          <span className="ml-1 text-[#93000a]" aria-hidden="true">
+            *
+          </span>
+        ) : null}
       </span>
       {children}
-      {hint ? (
+      {error ? (
+        <span className="block text-xs font-semibold text-[#93000a]" role="alert">
+          {error}
+        </span>
+      ) : hint ? (
         <span className="block text-xs text-[var(--brand-steel)]">{hint}</span>
       ) : null}
     </label>
