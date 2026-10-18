@@ -6,7 +6,8 @@ import {
   getCertificate,
   upsertCertificate,
 } from "@/lib/cert/store";
-import type { CertificateStatus } from "@/lib/cert/types";
+import type { CertificatePageFile } from "@/lib/cert/types";
+import { validateCertificateInput } from "@/lib/cert/validate";
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -29,17 +30,24 @@ export async function PUT(request: Request, ctx: Ctx) {
     const session = await requireSession();
     const { id } = await ctx.params;
     const body = await request.json();
+    const checked = validateCertificateInput(body);
+    if (!checked.ok) {
+      return NextResponse.json(
+        { error: checked.message, errors: checked.errors },
+        { status: 400 },
+      );
+    }
     const certificate = await upsertCertificate({
       id,
-      certificateNo: String(body.certificateNo || ""),
-      customerId: String(body.customerId || ""),
-      expireDate: String(body.expireDate || ""),
-      status: (body.status || "valid") as CertificateStatus,
-      notes: String(body.notes || ""),
-      verificationToken: body.verificationToken
-        ? String(body.verificationToken)
+      certificateNo: checked.data.certificateNo,
+      customerId: checked.data.customerId,
+      expireDate: checked.data.expireDate,
+      status: checked.data.status,
+      notes: checked.data.notes,
+      verificationToken: checked.data.verificationToken,
+      pages: Array.isArray(body.pages)
+        ? (checked.data.pages as CertificatePageFile[])
         : undefined,
-      pages: Array.isArray(body.pages) ? body.pages : undefined,
       createdById: session.id,
     });
     return NextResponse.json({ certificate });

@@ -5,7 +5,7 @@ import {
   nextCertificateNumber,
   upsertCertificate,
 } from "@/lib/cert/store";
-import type { CertificateStatus } from "@/lib/cert/types";
+import { validateCertificateInput } from "@/lib/cert/validate";
 
 export async function GET(request: Request) {
   try {
@@ -26,16 +26,21 @@ export async function POST(request: Request) {
   try {
     const session = await requireSession();
     const body = await request.json();
+    const checked = validateCertificateInput(body);
+    if (!checked.ok) {
+      return NextResponse.json(
+        { error: checked.message, errors: checked.errors },
+        { status: 400 },
+      );
+    }
     const certificate = await upsertCertificate({
-      certificateNo: String(body.certificateNo || ""),
-      customerId: String(body.customerId || ""),
-      expireDate: String(body.expireDate || ""),
-      status: (body.status || "valid") as CertificateStatus,
-      notes: String(body.notes || ""),
-      verificationToken: body.verificationToken
-        ? String(body.verificationToken)
-        : undefined,
-      pages: Array.isArray(body.pages) ? body.pages : [],
+      certificateNo: checked.data.certificateNo,
+      customerId: checked.data.customerId,
+      expireDate: checked.data.expireDate,
+      status: checked.data.status,
+      notes: checked.data.notes,
+      verificationToken: checked.data.verificationToken,
+      pages: checked.data.pages as import("@/lib/cert/types").CertificatePageFile[],
       createdById: session.id,
     });
     return NextResponse.json({ certificate });
