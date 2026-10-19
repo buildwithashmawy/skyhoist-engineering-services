@@ -217,7 +217,9 @@ export const localStore = {
     const store = await readStore();
     const customers = new Map(store.customers.map((c) => [c.id, c]));
     return [...store.certificates]
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .sort((a, b) =>
+        String(b.createdAt || "").localeCompare(String(a.createdAt || "")),
+      )
       .map((cert) => ({
         ...cert,
         customerName: customers.get(cert.customerId)?.fullName || "Unknown customer",
