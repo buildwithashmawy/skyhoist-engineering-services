@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   ComplianceCard,
   Field,
@@ -37,7 +36,6 @@ function fieldClass(hasError: boolean) {
 }
 
 export function CertificateForm({ certificateId }: Props) {
-  const router = useRouter();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [customersLoaded, setCustomersLoaded] = useState(false);
   const [customersError, setCustomersError] = useState("");
@@ -234,8 +232,12 @@ export function CertificateForm({ certificateId }: Props) {
         setLoading(false);
         return;
       }
-      router.push("/certificate/admin/certificates/");
-      router.refresh();
+      const savedNo =
+        String(data.certificate?.certificateNo || checked.data.certificateNo);
+      // Full navigation avoids a stale Next.js router cache on the archive page.
+      window.location.assign(
+        `/certificate/admin/certificates/?created=${encodeURIComponent(savedNo)}`,
+      );
     } catch {
       setError("Could not save certificate. Check your connection and try again.");
       setLoading(false);
@@ -249,7 +251,7 @@ export function CertificateForm({ certificateId }: Props) {
       <PageHeader
         eyebrow="ORGANIZATION REGISTRY"
         title={certificateId ? "Edit Certificate" : "New Institutional Certificate"}
-        description="Certificates are shared across the whole organization - every admin and inspector sees the same archive."
+        description="Certificates are shared across the whole organization — every admin and inspector sees the same archive."
         breadcrumb={[
           { label: "Archive", href: "/certificate/admin/certificates/" },
           { label: "Certificates", href: "/certificate/admin/certificates/" },
@@ -287,7 +289,7 @@ export function CertificateForm({ certificateId }: Props) {
                   >
                     Add a customer
                   </Link>{" "}
-                  first - company name is required - then return here to issue
+                  first — company name is required — then return here to issue
                   the certificate.
                 </div>
               ) : null}
@@ -402,10 +404,10 @@ export function CertificateForm({ certificateId }: Props) {
 
               <div className="rounded-2xl border border-[#d7c8ad] bg-[#f6f1e7] p-5">
                 <h3 className="font-display text-lg font-bold text-[#171310]">
-                  Document Repository (Pages 1-5)
+                  Document Repository (Pages 1–5)
                 </h3>
                 <p className="mt-1 text-xs text-[#8a7c61]">
-                  Optional - you can create the certificate now and upload pages
+                  Optional — you can create the certificate now and upload pages
                   later.
                 </p>
                 <div className="mt-4 grid gap-3">
@@ -439,7 +441,7 @@ export function CertificateForm({ certificateId }: Props) {
                         <div className="flex flex-wrap items-center gap-2">
                           <label className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-black px-4 py-2 text-xs font-bold text-white">
                             {uploadingPage === pageNo
-                              ? "Uploading..."
+                              ? "Uploading…"
                               : page
                                 ? "Replace file"
                                 : "Upload file"}
@@ -475,7 +477,7 @@ export function CertificateForm({ certificateId }: Props) {
               <div className="flex flex-wrap gap-3 pt-2">
                 <PrimaryButton type="submit" disabled={loading || !canCreate}>
                   {loading
-                    ? "Saving..."
+                    ? "Saving…"
                     : certificateId
                       ? "Save Changes"
                       : "Create Certificate"}
@@ -493,8 +495,8 @@ export function CertificateForm({ certificateId }: Props) {
           items={[
             "Required before create: certificate number, customer, expire date, and verification token.",
             "Create the company in Customer Ledger first (company name required), then link it here.",
-            "Document pages are optional - issue the certificate first if files are not ready.",
-            "Keep the verification token unique - it powers the public QR page.",
+            "Document pages are optional — issue the certificate first if files are not ready.",
+            "Keep the verification token unique — it powers the public QR page.",
             "Use Valid only when the certificate is ready for public checks.",
           ]}
         />
