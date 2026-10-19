@@ -250,11 +250,18 @@ export const firebaseStore = {
         const cert = doc.data() as Certificate;
         return { ...cert, id: doc.id };
       })
-      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-      .map((cert) => ({
-        ...cert,
-        customerName: customers.get(cert.customerId)?.fullName || "Unknown customer",
-      }));
+      .sort((a, b) =>
+        String(b.createdAt || "").localeCompare(String(a.createdAt || "")),
+      )
+      .map((cert) => {
+        const customer =
+          customers.get(cert.customerId) ||
+          [...customers.values()].find((c) => c.id === cert.customerId);
+        return {
+          ...cert,
+          customerName: customer?.fullName || "Unknown customer",
+        };
+      });
   },
 
   async getCertificate(id: string) {
