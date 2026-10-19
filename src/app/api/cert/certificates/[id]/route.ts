@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { requireSession } from "@/lib/cert/auth";
 import {
@@ -11,6 +12,22 @@ import { validateCertificateInput } from "@/lib/cert/validate";
 
 type Ctx = { params: Promise<{ id: string }> };
 
+function errorResponse(error: unknown) {
+  const message = error instanceof Error ? error.message : "Failed";
+  if (message === "UNAUTHORIZED") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (message.startsWith("Firebase is required")) {
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
+  return NextResponse.json({ error: message }, { status: 400 });
+}
+
+function bustCertificateCaches() {
+  revalidatePath("/certificate/admin/certificates");
+  revalidatePath("/certificate/admin/certificates/");
+}
+
 export async function GET(_request: Request, ctx: Ctx) {
   try {
     await requireSession();
@@ -19,9 +36,12 @@ export async function GET(_request: Request, ctx: Ctx) {
     if (!certificate) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-    return NextResponse.json({ certificate });
-  } catch {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(
+      { certificate },
+      { headers: { "Cache-Control": "no-store, max-age=0" } },
+    );
+  } catch (error) {
+    return errorResponse(error);
   }
 }
 
@@ -50,13 +70,10 @@ export async function PUT(request: Request, ctx: Ctx) {
         : undefined,
       createdById: session.id,
     });
+    bustCertificateCaches();
     return NextResponse.json({ certificate });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed";
-    if (message === "UNAUTHORIZED") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return errorResponse(error);
   }
 }
 
@@ -65,13 +82,10 @@ export async function DELETE(_request: Request, ctx: Ctx) {
     await requireSession();
     const { id } = await ctx.params;
     await deleteCertificate(id);
+    bustCertificateCaches();
     return NextResponse.json({ ok: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed";
-    if (message === "UNAUTHORIZED") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return errorResponse(error);
   }
 }
 
@@ -82,14 +96,11 @@ export async function POST(request: Request, ctx: Ctx) {
     const body = await request.json().catch(() => ({}));
     if (body.action === "clone") {
       const certificate = await cloneCertificate(id, session.id);
+      bustCertificateCaches();
       return NextResponse.json({ certificate });
     }
     return NextResponse.json({ error: "Unknown action" }, { status: 400 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed";
-    if (message === "UNAUTHORIZED") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return errorResponse(error);
   }
 }

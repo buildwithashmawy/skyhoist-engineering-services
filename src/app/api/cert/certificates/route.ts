@@ -1,11 +1,25 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { requireSession } from "@/lib/cert/auth";
 import {
+  getCertificate,
   listCertificates,
   nextCertificateNumber,
   upsertCertificate,
 } from "@/lib/cert/store";
+import type { CertificatePageFile } from "@/lib/cert/types";
 import { validateCertificateInput } from "@/lib/cert/validate";
+
+function errorResponse(error: unknown) {
+  const message = error instanceof Error ? error.message : "Failed";
+  if (message === "UNAUTHORIZED") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (message.startsWith("Firebase is required")) {
+    return NextResponse.json({ error: message }, { status: 503 });
+  }
+  return NextResponse.json({ error: message }, { status: 400 });
+}
 
 export async function GET(request: Request) {
   try {
@@ -16,9 +30,17 @@ export async function GET(request: Request) {
         nextCertificateNo: await nextCertificateNumber(),
       });
     }
-    return NextResponse.json({ certificates: await listCertificates() });
-  } catch {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const certificates = await listCertificates();
+    return NextResponse.json(
+      { certificates },
+      {
+        headers: {
+          "Cache-Control": "no-store, max-age=0",
+        },
+      },
+    );
+  } catch (error) {
+    return errorResponse(error);
   }
 }
 
@@ -40,15 +62,23 @@ export async function POST(request: Request) {
       status: checked.data.status,
       notes: checked.data.notes,
       verificationToken: checked.data.verificationToken,
-      pages: checked.data.pages as import("@/lib/cert/types").CertificatePageFile[],
+      pages: checked.data.pages as CertificatePageFile[],
       createdById: session.id,
     });
-    return NextResponse.json({ certificate });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed";
-    if (message === "UNAUTHORIZED") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const verified = await getCertificate(certificate.id);
+    if (!verified) {
+      return NextResponse.json(
+        {
+          error:
+            "Certificate write did not persist. Check Firebase configuration and try again.",
+        },
+        { status: 500 },
+      );
     }
-    return NextResponse.json({ error: message }, { status: 400 });
+    revalidatePath("/certificate/admin/certificates");
+    revalidatePath("/certificate/admin/certificates/");
+    return NextResponse.json({ certificate: verified });
+  } catch (error) {
+    return errorResponse(error);
   }
 }

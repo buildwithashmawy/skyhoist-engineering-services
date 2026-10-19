@@ -3,7 +3,27 @@ import { firebaseStore } from "./store-firebase";
 import { localStore, publicUser as toPublicUser } from "./store-local";
 import type { CertUser } from "./types";
 
-const active = () => (isFirebaseConfigured() ? firebaseStore : localStore);
+function isServerlessRuntime() {
+  return Boolean(
+    process.env.VERCEL ||
+      process.env.AWS_LAMBDA_FUNCTION_NAME ||
+      process.env.NETLIFY,
+  );
+}
+
+/**
+ * Prefer Firebase whenever configured. On serverless hosts, local JSON in /tmp
+ * is not shared across instances — refuse that mode so creates cannot "vanish".
+ */
+const active = () => {
+  if (isFirebaseConfigured()) return firebaseStore;
+  if (isServerlessRuntime()) {
+    throw new Error(
+      "Firebase is required in production. Set FIREBASE_SERVICE_ACCOUNT_JSON (or FIREBASE_PROJECT_ID / FIREBASE_CLIENT_EMAIL / FIREBASE_PRIVATE_KEY) so certificates persist.",
+    );
+  }
+  return localStore;
+};
 
 export function publicUser(user: CertUser) {
   return toPublicUser(user);
