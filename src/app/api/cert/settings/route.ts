@@ -1,15 +1,23 @@
 import { NextResponse } from "next/server";
 import { requireSession } from "@/lib/cert/auth";
-import { getStoreBackend, listAdmins } from "@/lib/cert/store";
+import {
+  getStoreBackend,
+  listAdmins,
+  listDirectoryUsers,
+  listOperators,
+} from "@/lib/cert/store";
 
 export async function GET(request: Request) {
   try {
     const session = await requireSession();
     const origin = new URL(request.url).origin;
     const backend = getStoreBackend();
+    const isAdmin = session.role === "admin";
     return NextResponse.json({
       currentUser: session,
-      admins: session.role === "admin" ? await listAdmins() : [session],
+      admins: isAdmin ? await listAdmins() : [session],
+      operators: isAdmin ? await listOperators() : [],
+      users: isAdmin ? await listDirectoryUsers() : [session],
       verificationBaseUrl: `${origin}/verify/`,
       storeBackend: backend,
       uploadDirectory:

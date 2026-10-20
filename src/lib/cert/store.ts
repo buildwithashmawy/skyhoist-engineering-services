@@ -107,6 +107,25 @@ export async function deleteCertificate(id: string) {
   return active().deleteCertificate(id);
 }
 
+export async function changeOwnPassword(
+  userId: string,
+  currentPassword: string,
+  newPassword: string,
+) {
+  return active().changeOwnPassword(userId, currentPassword, newPassword);
+}
+
+export async function adminResetPassword(
+  targetUserId: string,
+  newPassword: string,
+) {
+  return active().adminResetPassword(targetUserId, newPassword);
+}
+
+export async function listDirectoryUsers() {
+  return active().listDirectoryUsers();
+}
+
 export async function cloneCertificate(id: string, createdById: string) {
   return active().cloneCertificate(id, createdById);
 }

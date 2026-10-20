@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { requireSession } from "@/lib/cert/auth";
+import { requireAdmin, requireSession } from "@/lib/cert/auth";
 import {
   deleteCustomer,
   getCustomer,
@@ -8,6 +8,20 @@ import {
 import { validateCustomerInput } from "@/lib/cert/validate";
 
 type Ctx = { params: Promise<{ id: string }> };
+
+function errorResponse(error: unknown) {
+  const message = error instanceof Error ? error.message : "Failed";
+  if (message === "UNAUTHORIZED") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (message === "FORBIDDEN") {
+    return NextResponse.json(
+      { error: "Inspectors cannot delete records." },
+      { status: 403 },
+    );
+  }
+  return NextResponse.json({ error: message }, { status: 400 });
+}
 
 export async function GET(_request: Request, ctx: Ctx) {
   try {
@@ -18,8 +32,8 @@ export async function GET(_request: Request, ctx: Ctx) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
     return NextResponse.json({ customer });
-  } catch {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  } catch (error) {
+    return errorResponse(error);
   }
 }
 
@@ -44,25 +58,17 @@ export async function PUT(request: Request, ctx: Ctx) {
     });
     return NextResponse.json({ customer });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed";
-    if (message === "UNAUTHORIZED") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return errorResponse(error);
   }
 }
 
 export async function DELETE(_request: Request, ctx: Ctx) {
   try {
-    await requireSession();
+    await requireAdmin();
     const { id } = await ctx.params;
     await deleteCustomer(id);
     return NextResponse.json({ ok: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed";
-    if (message === "UNAUTHORIZED") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    return NextResponse.json({ error: message }, { status: 400 });
+    return errorResponse(error);
   }
 }

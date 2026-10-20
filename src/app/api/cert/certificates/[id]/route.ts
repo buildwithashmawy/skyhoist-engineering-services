@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
-import { requireSession } from "@/lib/cert/auth";
+import { requireAdmin, requireSession } from "@/lib/cert/auth";
 import {
   cloneCertificate,
   deleteCertificate,
@@ -16,6 +16,12 @@ function errorResponse(error: unknown) {
   const message = error instanceof Error ? error.message : "Failed";
   if (message === "UNAUTHORIZED") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (message === "FORBIDDEN") {
+    return NextResponse.json(
+      { error: "Inspectors cannot delete records." },
+      { status: 403 },
+    );
   }
   if (message.startsWith("Firebase is required")) {
     return NextResponse.json({ error: message }, { status: 503 });
@@ -79,7 +85,7 @@ export async function PUT(request: Request, ctx: Ctx) {
 
 export async function DELETE(_request: Request, ctx: Ctx) {
   try {
-    await requireSession();
+    await requireAdmin();
     const { id } = await ctx.params;
     await deleteCertificate(id);
     bustCertificateCaches();
