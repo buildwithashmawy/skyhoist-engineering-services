@@ -21,6 +21,7 @@ import {
 
 type Props = {
   certificateId?: string;
+  canDeleteFiles?: boolean;
 };
 
 function randomToken() {
@@ -35,10 +36,14 @@ function fieldClass(hasError: boolean) {
     : inputClass;
 }
 
-export function CertificateForm({ certificateId }: Props) {
+export function CertificateForm({
+  certificateId,
+  canDeleteFiles = false,
+}: Props) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [customersLoaded, setCustomersLoaded] = useState(false);
   const [customersError, setCustomersError] = useState("");
+  const [allowFileDelete, setAllowFileDelete] = useState(canDeleteFiles);
   const [certificateNo, setCertificateNo] = useState("");
   const [customerId, setCustomerId] = useState("");
   const [expireDate, setExpireDate] = useState("");
@@ -83,6 +88,13 @@ export function CertificateForm({ certificateId }: Props) {
 
   useEffect(() => {
     async function bootstrap() {
+      const meRes = await fetch("/api/cert/me/", { credentials: "include" });
+      const meData = await meRes.json().catch(() => ({}));
+      if (meRes.ok && meData.user?.role === "admin") {
+        setAllowFileDelete(true);
+      } else if (meRes.ok) {
+        setAllowFileDelete(false);
+      }
       await loadCustomers();
 
       if (!certificateId) {
@@ -357,7 +369,10 @@ export function CertificateForm({ certificateId }: Props) {
                     aria-required="true"
                   />
                 </Field>
-                <Field label="Status">
+                <Field
+                  label="Status"
+                  hint="Past expire dates automatically become Expired (revoked stays revoked)."
+                >
                   <select
                     className={inputClass}
                     value={status}
@@ -458,7 +473,7 @@ export function CertificateForm({ certificateId }: Props) {
                               }}
                             />
                           </label>
-                          {page ? (
+                          {page && allowFileDelete ? (
                             <button
                               type="button"
                               onClick={() => removePage(pageNo)}
@@ -495,9 +510,9 @@ export function CertificateForm({ certificateId }: Props) {
           items={[
             "Required before create: certificate number, customer, expire date, and verification token.",
             "Create the company in Customer Ledger first (company name required), then link it here.",
+            "After the expire date passes, status becomes Expired automatically.",
             "Document pages are optional — issue the certificate first if files are not ready.",
             "Keep the verification token unique — it powers the public QR page.",
-            "Use Valid only when the certificate is ready for public checks.",
           ]}
         />
       </div>
