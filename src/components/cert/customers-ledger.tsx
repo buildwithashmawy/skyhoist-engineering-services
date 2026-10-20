@@ -15,7 +15,13 @@ import {
 } from "@/components/cert/ui";
 import type { Customer } from "@/lib/cert/types";
 
-export function CustomersLedger({ customers }: { customers: Customer[] }) {
+export function CustomersLedger({
+  customers,
+  canDelete = false,
+}: {
+  customers: Customer[];
+  canDelete?: boolean;
+}) {
   const router = useRouter();
   const [selected, setSelected] = useState<Customer | null>(null);
 
@@ -139,13 +145,15 @@ export function CustomersLedger({ customers }: { customers: Customer[] }) {
                               Edit
                             </SecondaryButton>
                           </Link>
-                          <SecondaryButton
-                            type="button"
-                            className="min-h-9 px-3"
-                            onClick={() => void remove(customer.id)}
-                          >
-                            Delete
-                          </SecondaryButton>
+                          {canDelete ? (
+                            <SecondaryButton
+                              type="button"
+                              className="min-h-9 px-3"
+                              onClick={() => void remove(customer.id)}
+                            >
+                              Delete
+                            </SecondaryButton>
+                          ) : null}
                         </div>
                       </td>
                     </tr>
