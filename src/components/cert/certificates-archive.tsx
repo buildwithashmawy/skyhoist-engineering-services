@@ -43,7 +43,13 @@ function normalizeRows(list: unknown): CertificateRow[] {
   });
 }
 
-export function CertificatesArchive({ rows: initialRows }: { rows: CertificateRow[] }) {
+export function CertificatesArchive({
+  rows: initialRows,
+  canDelete = false,
+}: {
+  rows: CertificateRow[];
+  canDelete?: boolean;
+}) {
   const router = useRouter();
   const [rows, setRows] = useState<CertificateRow[]>(() => normalizeRows(initialRows));
   const [listError, setListError] = useState("");
@@ -279,13 +285,15 @@ export function CertificatesArchive({ rows: initialRows }: { rows: CertificateRo
                         >
                           Clone
                         </SecondaryButton>
-                        <SecondaryButton
-                          type="button"
-                          className="min-h-9 px-3"
-                          onClick={() => void remove(row.id)}
-                        >
-                          Delete
-                        </SecondaryButton>
+                        {canDelete ? (
+                          <SecondaryButton
+                            type="button"
+                            className="min-h-9 px-3"
+                            onClick={() => void remove(row.id)}
+                          >
+                            Delete
+                          </SecondaryButton>
+                        ) : null}
                       </div>
                     </td>
                   </tr>
