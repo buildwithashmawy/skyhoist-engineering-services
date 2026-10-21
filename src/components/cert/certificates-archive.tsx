@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import QRCode from "qrcode";
+import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useState } from "react";
 import { DetailDrawer } from "@/components/cert/detail-drawer";
 import {
   PageHeader,
@@ -13,6 +14,7 @@ import {
   SecondaryButton,
   StatCard,
   StatusPill,
+  inputClass,
 } from "@/components/cert/ui";
 
 export type CertificateRow = {
@@ -39,8 +41,43 @@ function normalizeRows(list: unknown): CertificateRow[] {
       customerName: String(r.customerName || "Unknown customer"),
       status: String(r.status || "pending"),
       verificationToken: String(r.verificationToken || ""),
+      notes: String(r.notes || ""),
     };
   });
+}
+
+function rowSearchText(row: CertificateRow) {
+  const expireLabel = row.expireDate
+    ? new Date(row.expireDate).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "";
+  return [
+    row.certificateNo,
+    row.customerName,
+    row.status,
+    row.expireDate,
+    expireLabel,
+    row.verificationToken,
+    row.notes || "",
+    row.id,
+    row.createdAt || "",
+  ]
+    .join(" ")
+    .toLowerCase();
+}
+
+function matchesQuery(row: CertificateRow, query: string) {
+  const terms = query
+    .toLowerCase()
+    .split(/\s+/)
+    .map((t) => t.trim())
+    .filter(Boolean);
+  if (terms.length === 0) return true;
+  const haystack = rowSearchText(row);
+  return terms.every((term) => haystack.includes(term));
 }
 
 export function CertificatesArchive({
@@ -52,6 +89,8 @@ export function CertificatesArchive({
 }) {
   const router = useRouter();
   const [rows, setRows] = useState<CertificateRow[]>(() => normalizeRows(initialRows));
+  const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
   const [listError, setListError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [selected, setSelected] = useState<CertificateRow | null>(null);
@@ -100,14 +139,22 @@ export function CertificatesArchive({
     void buildQr();
   }, [selected]);
 
+  const filteredRows = useMemo(
+    () => rows.filter((row) => matchesQuery(row, deferredQuery)),
+    [rows, deferredQuery],
+  );
+
   const stats = useMemo(() => {
-    const valid = rows.filter((r) => r.status === "valid").length;
-    const pending = rows.filter((r) => r.status === "pending").length;
-    const closed = rows.filter(
+    const source = deferredQuery.trim() ? filteredRows : rows;
+    const valid = source.filter((r) => r.status === "valid").length;
+    const pending = source.filter((r) => r.status === "pending").length;
+    const closed = source.filter(
       (r) => r.status === "expired" || r.status === "revoked",
     ).length;
     return { valid, pending, closed };
-  }, [rows]);
+  }, [rows, filteredRows, deferredQuery]);
+
+  const isSearching = Boolean(query.trim());
 
   async function openDetails(id: string) {
     const res = await fetch(`/api/cert/certificates/${id}/`, {
@@ -170,7 +217,9 @@ export function CertificatesArchive({
         breadcrumb={[{ label: "Archive" }, { label: "Certificates" }]}
         actions={
           <>
-            <RecordsBadge count={rows.length} />
+            <RecordsBadge
+              count={isSearching ? filteredRows.length : rows.length}
+            />
             <SecondaryButton
               type="button"
               disabled={refreshing}
@@ -182,7 +231,7 @@ export function CertificatesArchive({
               href={`data:text/csv;charset=utf-8,${encodeURIComponent(
                 [
                   "Certificate No.,Expire Date,Customer Name,Status,Verification Token",
-                  ...rows.map(
+                  ...filteredRows.map(
                     (r) =>
                       `"${r.certificateNo}","${r.expireDate}","${r.customerName.replaceAll('"', '""')}","${r.status}","${r.verificationToken}"`,
                   ),
@@ -218,6 +267,37 @@ export function CertificatesArchive({
         </div>
       ) : null}
 
+      <div className="mb-4">
+        <label className="relative block">
+          <span className="sr-only">Search certificates</span>
+          <Search
+            className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--brand-steel)]"
+            aria-hidden="true"
+          />
+          <input
+            className={`${inputClass} pl-11`}
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by certificate no., customer, status, expire date, token, or notes…"
+            autoComplete="off"
+          />
+        </label>
+        {isSearching ? (
+          <p className="mt-2 text-xs text-[var(--brand-steel)]">
+            Showing {filteredRows.length} of {rows.length} certificates
+            {filteredRows.length === 0 ? " — try a different term." : "."}{" "}
+            <button
+              type="button"
+              className="font-semibold text-[var(--brand-ink)] underline underline-offset-2"
+              onClick={() => setQuery("")}
+            >
+              Clear search
+            </button>
+          </p>
+        ) : null}
+      </div>
+
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
         <StatCard label="Valid" value={stats.valid} tone="valid" />
         <StatCard label="Pending" value={stats.pending} tone="pending" />
@@ -235,6 +315,21 @@ export function CertificatesArchive({
               <PrimaryButton type="button">Go To Certificate Form</PrimaryButton>
             </Link>
           </div>
+        ) : filteredRows.length === 0 ? (
+          <div className="p-8 text-center">
+            <p className="font-display text-xl font-bold">No matches</p>
+            <p className="mt-2 text-sm text-[var(--brand-steel)]">
+              Nothing matched “{query.trim()}”. Try certificate number, customer
+              name, status, or part of a verification token.
+            </p>
+            <SecondaryButton
+              type="button"
+              className="mt-5"
+              onClick={() => setQuery("")}
+            >
+              Clear search
+            </SecondaryButton>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-left text-sm">
@@ -248,7 +343,7 @@ export function CertificatesArchive({
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row) => (
+                {filteredRows.map((row) => (
                   <tr key={row.id} className="border-b border-[var(--border)]">
                     <td className="px-5 py-4 font-semibold">{row.certificateNo}</td>
                     <td className="px-5 py-4 text-[var(--brand-steel)]">
